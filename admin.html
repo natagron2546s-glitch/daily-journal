@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — บันทึกประจำวัน</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0d0f1a;
+    --surface: #141828;
+    --surface2: #1c2238;
+    --border: #252d45;
+    --text: #e2e6f3;
+    --text-soft: #8b93b4;
+    --text-muted: #4a5278;
+    --accent: #4f8ef7;
+    --accent-dim: #1e3060;
+    --green: #34d399;
+    --green-dim: #0d3326;
+    --amber: #fbbf24;
+    --amber-dim: #3a2a05;
+    --red: #f87171;
+    --red-dim: #3a1010;
+    --purple: #a78bfa;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ─── ADMIN LOGIN ─── */
+  #admin-login {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at 30% 30%, #1a1f3a 0%, #0d0f1a 60%);
+    padding: 20px;
+  }
+
+  .admin-login-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 44px 40px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .admin-icon {
+    width: 60px; height: 60px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  .admin-login-box h1 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .admin-login-box p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+
+  .admin-field { margin-bottom: 14px; text-align: left; }
+
+  .admin-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+  }
+
+  .admin-field input {
+    width: 100%;
+    padding: 11px 13px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .admin-field input:focus { border-color: var(--accent); }
+
+  .btn-admin-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-admin-login:hover { opacity: 0.88; }
+
+  .admin-hint {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ─── MAIN DASHBOARD ─── */
+  #admin-app { display: none; }
+
+  /* Header */
+  .dash-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .dash-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .badge-admin {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+
+  .last-refresh {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .btn-refresh {
+    padding: 6px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-soft);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .btn-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-admin-out {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .btn-admin-out:hover { border-color: var(--red); color: var(--red); }
+
+  /* Tabs */
+  .dash-tabs {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex; gap: 0;
+  }
+
+  .tab-btn {
+    padding: 12px 18px;
+    background: none; border: none;
+    color: var(--text-muted);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .tab-btn:hover { color: var(--text-soft); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-pane { display: none; padding: 28px; max-width: 1200px; margin: 0 auto; }
+  .tab-pane.active { display: block; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  .kpi-card.blue .kpi-value { color: var(--accent); }
+  .kpi-card.green .kpi-value { color: var(--green); }
+  .kpi-card.amber .kpi-value { color: var(--amber); }
+  .kpi-card.purple .kpi-value { color: var(--purple); }
+
+  /* Section */
+  .section-title {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .section-title .count-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 100px;
+    color: var(--text-soft);
+  }
+
+  /* Table */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-soft);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface2); }
+
+  .td-name {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .avatar-sm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .avatar-sm img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+  .mono { font-family: var(--mono); font-size: 12px; }
+
+  /* Status chips */
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .chip-login { background: var(--green-dim); color: var(--green); }
+  .chip-logout { background: var(--red-dim); color: var(--red); }
+  .chip-online { background: var(--green-dim); color: var(--green); }
+  .chip-offline { background: var(--border); color: var(--text-muted); }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot-green { background: var(--green); }
+  .dot-gray { background: var(--text-muted); }
+
+  /* Filter bar */
+  .filter-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .filter-row input,
+  .filter-row select {
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .filter-row input:focus,
+  .filter-row select:focus { border-color: var(--accent); }
+
+  .filter-row input { min-width: 200px; flex: 1; }
+
+  /* Timeline log */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 140px 20px 1fr;
+    gap: 0 14px;
+    padding: 0;
+    position: relative;
+  }
+
+  .tl-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    padding: 12px 0;
+    line-height: 1.4;
+  }
+
+  .tl-dot-col {
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-top: 16px;
+    flex-shrink: 0;
+  }
+
+  .tl-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-item:last-child .tl-line { display: none; }
+
+  .tl-content {
+    padding: 10px 0 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tl-item:last-child .tl-content { border-bottom: none; }
+
+  .tl-name { font-weight: 600; color: var(--text); font-size: 13px; }
+  .tl-action { font-size: 12px; color: var(--text-muted); }
+  .tl-ua { font-family: var(--mono); font-size: 10px; color: var(--text-muted); margin-top: 3px; opacity: 0.6; }
+
+  /* User detail panel */
+  .user-detail-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+
+  .detail-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .detail-card-head {
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+  }
+
+  .detail-card-body { padding: 14px 16px; }
+
+  .meta-row {
+    display: flex; justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .meta-row:last-child { border-bottom: none; }
+  .meta-row .label { color: var(--text-muted); }
+  .meta-row .val { color: var(--text); font-weight: 500; }
+
+  /* Activity heatmap */
+  .heatmap-wrap { margin-bottom: 24px; }
+  .heatmap { display: flex; gap: 3px; flex-wrap: wrap; }
+  .hm-cell {
+    width: 14px; height: 14px;
+    border-radius: 2px;
+    background: var(--surface2);
+    cursor: default;
+    position: relative;
+  }
+
+  .hm-cell[data-v="1"] { background: #1e3060; }
+  .hm-cell[data-v="2"] { background: #2a4a8a; }
+  .hm-cell[data-v="3"] { background: #3a6ac0; }
+  .hm-cell[data-v="4"] { background: var(--accent); }
+
+  /* empty */
+  .empty-dash {
+    text-align: center; padding: 48px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  .empty-dash .e-icon { font-size: 36px; margin-bottom: 10px; }
+
+  /* Export */
+  .btn-export {
+    padding: 7px 16px;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    border-radius: var(--radius-sm);
+    color: var(--green);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn-export:hover { opacity: 0.8; }
+
+  .btn-danger {
+    padding: 7px 16px;
+    background: var(--red-dim);
+    border: 1px solid var(--red);
+    border-radius: var(--radius-sm);
+    color: var(--red);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-left: 8px;
+  }
+
+  .btn-danger:hover { opacity: 0.8; }
+
+  .section-actions { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+
+  /* Entry viewer */
+  .entry-viewer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+
+  .entry-viewer-card:hover { border-color: var(--accent); }
+
+  .ev-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .ev-activity { font-weight: 700; color: var(--text); font-size: 14px; }
+  .ev-time { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+  .ev-detail { font-size: 13px; color: var(--text-soft); margin-bottom: 6px; }
+
+  .ev-row { display: flex; gap: 10px; margin-top: 8px; }
+  .ev-block { flex: 1; padding: 8px 10px; border-radius: 6px; font-size: 12px; }
+  .ev-block.prob { background: var(--red-dim); color: var(--red); border-left: 2px solid var(--red); }
+  .ev-block.sol { background: var(--green-dim); color: var(--green); border-left: 2px solid var(--green); }
+  .ev-block-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.7; margin-bottom: 2px; }
+
+  .ev-photos { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .ev-photos img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; cursor: pointer; }
+
+  /* Pagination */
+  .pagination { display: flex; gap: 6px; align-items: center; margin-top: 14px; justify-content: flex-end; }
+  .pg-btn {
+    padding: 5px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-soft);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .pg-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Selected user highlight */
+  .user-row { cursor: pointer; }
+  .user-row.selected td { background: var(--accent-dim) !important; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ ADMIN LOGIN ═══════════ -->
+<div id="admin-login">
+  <div class="admin-login-box">
+    <div class="admin-icon">🛡️</div>
+    <h1>Admin Dashboard</h1>
+    <p>ระบบหลังบ้าน — บันทึกประจำวัน</p>
+
+    <div class="admin-field">
+      <label>Admin Password</label>
+      <input type="password" id="admin-pass" placeholder="กรอกรหัส Admin" onkeydown="if(event.key==='Enter') adminLogin()">
+    </div>
+
+    <button class="btn-admin-login" onclick="adminLogin()">เข้าสู่ระบบ Admin</button>
+    <div class="admin-hint">⚠️ รหัสเริ่มต้น: <strong>admin1234</strong><br>สามารถเปลี่ยนได้ในหน้าตั้งค่า</div>
+  </div>
+</div>
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<div id="admin-app">
+  <header class="dash-header">
+    <div class="dash-brand">
+      🛡️ Admin Dashboard
+      <span class="badge-admin">Admin</span>
+    </div>
+    <div class="header-right">
+      <span class="last-refresh" id="refresh-time"></span>
+      <button class="btn-refresh" onclick="refreshAll()">↻ รีเฟรช</button>
+      <button class="btn-admin-out" onclick="adminLogout()">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <div class="dash-tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">📊 ภาพรวม</button>
+    <button class="tab-btn" onclick="switchTab('users')">👥 ผู้ใช้งาน</button>
+    <button class="tab-btn" onclick="switchTab('logs')">📋 Log การเข้าใช้</button>
+    <button class="tab-btn" onclick="switchTab('entries')">📝 รายการทั้งหมด</button>
+    <button class="tab-btn" onclick="switchTab('settings')">⚙️ ตั้งค่า</button>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-pane active" id="tab-overview">
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-label">ผู้ใช้ทั้งหมด</div>
+        <div class="kpi-value" id="kpi-users">0</div>
+        <div class="kpi-sub">บัญชีในระบบ</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Login วันนี้</div>
+        <div class="kpi-value" id="kpi-today-logins">0</div>
+        <div class="kpi-sub">ครั้ง</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">รายการบันทึกรวม</div>
+        <div class="kpi-value" id="kpi-total-entries">0</div>
+        <div class="kpi-sub">ทุกผู้ใช้</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">Login ทั้งหมด</div>
+        <div class="kpi-value" id="kpi-total-logins">0</div>
+        <div class="kpi-sub">ตลอดช่วงเวลา</div>
+      </div>
+    </div>
+
+    <div class="section-title">🕐 กิจกรรมล่าสุด (10 รายการ)</div>
+    <div class="table-wrap">
+      <div style="padding:16px 14px;" id="recent-activity-wrap">
+        <div class="timeline" id="recent-activity"></div>
+      </div>
+    </div>
+
+    <div class="section-title">📈 สรุปผู้ใช้งาน</div>
+    <div class="table-wrap">
+      <table class="data-table" id="overview-users-table">
+        <thead>
+          <tr>
+            <th>ชื่อผู้ใช้</th>
+            <th>Login ล่าสุด</th>
+            <th>จำนวน Login</th>
+            <th>รายการบันทึก</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody id="overview-users-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: USERS -->
+  <div class="tab-pane" id="tab-users">
+    <div class="section-actions">
+      <div class="section-title" style="margin-bottom:0">👥 รายชื่อผู้ใช้งาน <span class="count-pill" id="users-count-pill">0</span></div>
+      <button class="btn-export" onclick="exportUsers()">⬇ Export CSV</button>
+    </div>
+
+    <div class="filter-row">
+      <input type="text" id="user-search" placeholder="🔍 ค้นหาชื่อผู้ใช้..." oninput="renderUsersTab()">
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ผู้ใช้</th>
+            <th>วันที่สมัคร</th>
+            <th>Login ครั้งแรก</th>
+            <th>Login ล่าสุด</th>
+            <th>จำนวน Login</th>
+            <th>รายการบันทึก</th>
+            <th>รูปภาพ</th>
+          </tr>
+        </thead>
+        <tbody id="users-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB: LOGS -->
+  <div class="tab-pane" id="tab-logs">
+    <div class="section-actions">
+      <div class="section-title" style="margin-bottom:0">📋 Login Log <span class="count-pill" id="logs-count-pill">0</span></div>
+      <div>
+        <button class="btn-export" onclick="exportLogs()">⬇ Export CSV</button>
+        <button class="btn-danger" onclick="clearLogs()">🗑 ล้าง Log</button>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <input type="text" id="log-search" placeholder="🔍 ค้นหาชื่อ..." oninput="renderLogs()">
+      <select id="log-action" onchange="renderLogs()">
+        <option value="">ทุกกิจกรรม</option>
+        <option value="login">Login</option>
+        <option value="logout">Logout</option>
+      </select>
+      <input type="date" id="log-date" onchange="renderLogs()">
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ผู้ใช้</th>
+            <th>กิจกรรม</th>
+            <th>วันที่</th>
+            <th>เวลา</th>
+            <th>Browser / Device</th>
+          </tr>
+        </thead>
+        <tbody id="logs-body"></tbody>
+      </table>
+      <div class="pagination" id="logs-pagination"></div>
+    </div>
+  </div>
+
+  <!-- TAB: ENTRIES -->
+  <div class="tab-pane" id="tab-entries">
+    <div class="section-actions">
+      <div class="section-title" style="margin-bottom:0">📝 รายการบันทึกทั้งหมด <span class="count-pill" id="entries-count-pill">0</span></div>
+      <button class="btn-export" onclick="exportEntries()">⬇ Export CSV</button>
+    </div>
+
+    <div class="filter-row">
+      <input type="text" id="entry-search" placeholder="🔍 ค้นหา กิจกรรม หรือปัญหา..." oninput="renderEntriesTab()">
+      <select id="entry-user-filter" onchange="renderEntriesTab()">
+        <option value="">ผู้ใช้ทั้งหมด</option>
+      </select>
+      <input type="date" id="entry-date-filter" onchange="renderEntriesTab()">
+    </div>
+
+    <div id="entries-viewer"></div>
+    <div class="pagination" id="entries-pagination"></div>
+  </div>
+
+  <!-- TAB: SETTINGS -->
+  <div class="tab-pane" id="tab-settings">
+    <div class="section-title">⚙️ ตั้งค่าระบบ Admin</div>
+    <div class="detail-card" style="max-width:480px;">
+      <div class="detail-card-head">เปลี่ยนรหัสผ่าน Admin</div>
+      <div class="detail-card-body">
+        <div class="admin-field" style="margin-bottom:12px;">
+          <label>รหัสเดิม</label>
+          <input type="password" id="old-pass" placeholder="รหัสผ่านปัจจุบัน">
+        </div>
+        <div class="admin-field" style="margin-bottom:12px;">
+          <label>รหัสใหม่</label>
+          <input type="password" id="new-pass" placeholder="รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)">
+        </div>
+        <div class="admin-field" style="margin-bottom:16px;">
+          <label>ยืนยันรหัสใหม่</label>
+          <input type="password" id="new-pass2" placeholder="พิมพ์รหัสใหม่อีกครั้ง">
+        </div>
+        <button class="btn-export" onclick="changeAdminPass()">บันทึกรหัสผ่านใหม่</button>
+      </div>
+    </div>
+
+    <div class="detail-card" style="max-width:480px; margin-top:16px;">
+      <div class="detail-card-head">จัดการข้อมูล</div>
+      <div class="detail-card-body">
+        <div class="meta-row">
+          <span class="label">ขนาด localStorage ที่ใช้</span>
+          <span class="val mono" id="storage-size">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="label">จำนวน Login Logs</span>
+          <span class="val mono" id="log-count-setting">—</span>
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px;">
+          <button class="btn-danger" onclick="clearLogs()">🗑 ล้าง Login Log</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lb" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:999;align-items:center;justify-content:center;cursor:zoom-out;">
+  <img id="lb-img" style="max-width:90vw;max-height:90vh;border-radius:8px;">
+</div>
+
+<script>
+// ─── ADMIN AUTH ───
+const ADMIN_PASS_KEY = 'journal_admin_pass';
+
+function getAdminPass() {
+  return localStorage.getItem(ADMIN_PASS_KEY) || 'admin1234';
+}
+
+function adminLogin() {
+  const p = document.getElementById('admin-pass').value;
+  if (p === getAdminPass()) {
+    sessionStorage.setItem('admin_authed', '1');
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    refreshAll();
+  } else {
+    document.getElementById('admin-pass').style.borderColor = '#f87171';
+    setTimeout(() => document.getElementById('admin-pass').style.borderColor = '', 1200);
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('admin_authed');
+  location.reload();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('admin-pass').addEventListener('keydown', e => {
+    if (e.key === 'Enter') adminLogin();
+  });
+  if (sessionStorage.getItem('admin_authed')) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    refreshAll();
+  }
+});
+
+// ─── DATA HELPERS ───
+function getAllUsers() {
+  return JSON.parse(localStorage.getItem('journal_users') || '{}');
+}
+
+function getUserEntries(name) {
+  return JSON.parse(localStorage.getItem(`journal_entries_${name}`) || '[]');
+}
+
+function getAllLogs() {
+  return JSON.parse(localStorage.getItem('journal_login_logs') || '[]');
+}
+
+// ─── TABS ───
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    const names = ['overview','users','logs','entries','settings'];
+    b.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+
+  if (name === 'overview') renderOverview();
+  else if (name === 'users') renderUsersTab();
+  else if (name === 'logs') renderLogs();
+  else if (name === 'entries') renderEntriesTab();
+  else if (name === 'settings') renderSettings();
+}
+
+// ─── REFRESH ALL ───
+function refreshAll() {
+  document.getElementById('refresh-time').textContent = `อัปเดต: ${fmtTime(new Date())}`;
+  renderOverview();
+}
+
+// ─── OVERVIEW ───
+function renderOverview() {
+  const users = getAllUsers();
+  const logs = getAllLogs();
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  const userNames = Object.keys(users);
+  const totalEntries = userNames.reduce((s, n) => s + getUserEntries(n).length, 0);
+  const todayLogins = logs.filter(l => l.ts.startsWith(todayStr) && l.action === 'login').length;
+
+  document.getElementById('kpi-users').textContent = userNames.length;
+  document.getElementById('kpi-today-logins').textContent = todayLogins;
+  document.getElementById('kpi-total-entries').textContent = totalEntries;
+  document.getElementById('kpi-total-logins').textContent = logs.filter(l => l.action === 'login').length;
+
+  // recent activity timeline
+  const recent = [...logs].reverse().slice(0, 10);
+  const tl = document.getElementById('recent-activity');
+  if (recent.length === 0) {
+    tl.innerHTML = '<div class="empty-dash"><div class="e-icon">📭</div>ยังไม่มี Log</div>';
+  } else {
+    tl.innerHTML = recent.map(l => {
+      const isLogin = l.action === 'login';
+      return `
+      <div class="tl-item">
+        <div class="tl-time">${fmtDate(l.ts)}<br>${fmtTime(new Date(l.ts))}</div>
+        <div class="tl-dot-col">
+          <div class="tl-dot" style="background:${isLogin ? 'var(--green)' : 'var(--red)'}"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-name">${esc(l.name)}</div>
+          <div class="tl-action"><span class="chip ${isLogin ? 'chip-login' : 'chip-logout'}">${isLogin ? '▶ Login' : '⏹ Logout'}</span></div>
+          <div class="tl-ua">${esc(l.ua || '')}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // overview user table
+  const tbody = document.getElementById('overview-users-body');
+  const userLogs = {};
+  logs.forEach(l => {
+    if (!userLogs[l.name]) userLogs[l.name] = [];
+    userLogs[l.name].push(l);
+  });
+
+  tbody.innerHTML = userNames.map(name => {
+    const ul = userLogs[name] || [];
+    const loginLogs = ul.filter(l => l.action === 'login');
+    const lastLogin = loginLogs.length ? new Date(loginLogs[loginLogs.length-1].ts) : null;
+    const isOnline = lastLogin && (Date.now() - lastLogin.getTime()) < 30 * 60 * 1000;
+    const entries = getUserEntries(name).length;
+    const u = users[name];
+
+    return `<tr>
+      <td><div class="td-name">${avatarHTML(u, name)} ${esc(name)}</div></td>
+      <td class="mono">${lastLogin ? fmtDateTime(lastLogin) : '—'}</td>
+      <td class="mono">${loginLogs.length}</td>
+      <td class="mono">${entries}</td>
+      <td><span class="chip ${isOnline ? 'chip-online' : 'chip-offline'}"><span class="dot ${isOnline ? 'dot-green' : 'dot-gray'}"></span>${isOnline ? 'Online' : 'Offline'}</span></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" class="empty-dash">ยังไม่มีผู้ใช้</td></tr>';
+}
+
+// ─── USERS TAB ───
+function renderUsersTab() {
+  const users = getAllUsers();
+  const logs = getAllLogs();
+  const search = document.getElementById('user-search').value.toLowerCase();
+
+  const userLogs = {};
+  logs.forEach(l => {
+    if (!userLogs[l.name]) userLogs[l.name] = { logins: [], logouts: [] };
+    userLogs[l.name][l.action === 'login' ? 'logins' : 'logouts'].push(l);
+  });
+
+  let rows = Object.entries(users).filter(([n]) => !search || n.toLowerCase().includes(search));
+
+  document.getElementById('users-count-pill').textContent = rows.length;
+
+  const tbody = document.getElementById('users-body');
+  tbody.innerHTML = rows.map(([name, u]) => {
+    const ul = userLogs[name] || { logins: [], logouts: [] };
+    const logins = ul.logins;
+    const first = logins.length ? fmtDateTime(new Date(logins[0].ts)) : '—';
+    const last = logins.length ? fmtDateTime(new Date(logins[logins.length-1].ts)) : '—';
+    const allEntries = getUserEntries(name);
+    const photos = allEntries.reduce((s, e) => s + (e.images?.length || 0), 0);
+
+    return `<tr>
+      <td><div class="td-name">${avatarHTML(u, name)} ${esc(name)}</div></td>
+      <td class="mono">${first}</td>
+      <td class="mono">${first}</td>
+      <td class="mono">${last}</td>
+      <td class="mono">${logins.length}</td>
+      <td class="mono">${allEntries.length}</td>
+      <td class="mono">${photos}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="7" class="empty-dash">ไม่พบผู้ใช้</td></tr>';
+}
+
+// ─── LOGS TAB ───
+let logsPage = 1;
+const LOGS_PER_PAGE = 50;
+
+function renderLogs() {
+  logsPage = 1;
+  renderLogsPage();
+}
+
+function renderLogsPage() {
+  const logs = getAllLogs().reverse();
+  const search = document.getElementById('log-search').value.toLowerCase();
+  const action = document.getElementById('log-action').value;
+  const dateF = document.getElementById('log-date').value;
+
+  const filtered = logs.filter(l => {
+    const matchName = !search || l.name.toLowerCase().includes(search);
+    const matchAction = !action || l.action === action;
+    const matchDate = !dateF || l.ts.startsWith(dateF);
+    return matchName && matchAction && matchDate;
+  });
+
+  document.getElementById('logs-count-pill').textContent = filtered.length;
+
+  const total = Math.ceil(filtered.length / LOGS_PER_PAGE);
+  const page = filtered.slice((logsPage-1)*LOGS_PER_PAGE, logsPage*LOGS_PER_PAGE);
+
+  const tbody = document.getElementById('logs-body');
+  tbody.innerHTML = page.map(l => {
+    const isLogin = l.action === 'login';
+    const d = new Date(l.ts);
+    const browser = parseBrowser(l.ua || '');
+    return `<tr>
+      <td><div class="td-name"><span style="font-size:12px">${esc(l.name)}</span></div></td>
+      <td><span class="chip ${isLogin ? 'chip-login' : 'chip-logout'}">${isLogin ? '▶ Login' : '⏹ Logout'}</span></td>
+      <td class="mono">${fmtDate(l.ts)}</td>
+      <td class="mono">${fmtTime(d)}</td>
+      <td style="font-size:11px;color:var(--text-muted)">${esc(browser)}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" class="empty-dash">ไม่พบ Log</td></tr>';
+
+  // pagination
+  const pg = document.getElementById('logs-pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+  let html = `<button class="pg-btn" onclick="logsPage--; renderLogsPage()" ${logsPage===1?'disabled':''}>← ก่อน</button>`;
+  for (let i = 1; i <= Math.min(total, 8); i++) {
+    html += `<button class="pg-btn ${i===logsPage?'active':''}" onclick="logsPage=${i}; renderLogsPage()">${i}</button>`;
+  }
+  html += `<button class="pg-btn" onclick="logsPage++; renderLogsPage()" ${logsPage===total?'disabled':''}>ถัดไป →</button>`;
+  pg.innerHTML = html;
+}
+
+// ─── ENTRIES TAB ───
+let entriesPage = 1;
+const ENTRIES_PER_PAGE = 15;
+
+function renderEntriesTab() {
+  // populate user filter
+  const sel = document.getElementById('entry-user-filter');
+  const users = Object.keys(getAllUsers());
+  if (sel.options.length <= 1) {
+    users.forEach(n => {
+      const o = document.createElement('option');
+      o.value = n; o.textContent = n;
+      sel.appendChild(o);
+    });
+  }
+  entriesPage = 1;
+  renderEntriesPage();
+}
+
+function renderEntriesPage() {
+  const search = document.getElementById('entry-search').value.toLowerCase();
+  const userF = document.getElementById('entry-user-filter').value;
+  const dateF = document.getElementById('entry-date-filter').value;
+
+  const users = getAllUsers();
+  let all = [];
+  Object.keys(users).forEach(name => {
+    getUserEntries(name).forEach(e => all.push({ ...e, _owner: name }));
+  });
+
+  all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const filtered = all.filter(e => {
+    const matchS = !search || [e.activity, e.detail, e.problem, e.solution].some(f => f && f.toLowerCase().includes(search));
+    const matchU = !userF || e._owner === userF;
+    const matchD = !dateF || e.date === dateF;
+    return matchS && matchU && matchD;
+  });
+
+  document.getElementById('entries-count-pill').textContent = filtered.length;
+
+  const total = Math.ceil(filtered.length / ENTRIES_PER_PAGE);
+  const page = filtered.slice((entriesPage-1)*ENTRIES_PER_PAGE, entriesPage*ENTRIES_PER_PAGE);
+
+  const wrap = document.getElementById('entries-viewer');
+  if (page.length === 0) {
+    wrap.innerHTML = '<div class="empty-dash"><div class="e-icon">📭</div>ไม่พบรายการ</div>';
+  } else {
+    wrap.innerHTML = page.map(e => `
+      <div class="entry-viewer-card">
+        <div class="ev-head">
+          <div>
+            <div class="ev-activity">${esc(e.activity)}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
+              👤 ${esc(e._owner)} &nbsp;·&nbsp; 📅 ${e.date} &nbsp;·&nbsp; 🕐 ${e.time} น.
+            </div>
+          </div>
+        </div>
+        ${e.detail ? `<div class="ev-detail">${esc(e.detail)}</div>` : ''}
+        ${(e.problem || e.solution) ? `
+        <div class="ev-row">
+          ${e.problem ? `<div class="ev-block prob"><div class="ev-block-label">🔴 ปัญหา</div>${esc(e.problem)}</div>` : ''}
+          ${e.solution ? `<div class="ev-block sol"><div class="ev-block-label">🟢 วิธีแก้</div>${esc(e.solution)}</div>` : ''}
+        </div>` : ''}
+        ${e.images && e.images.length ? `
+        <div class="ev-photos">
+          ${e.images.map(s => `<img src="${s}" onclick="openLB('${s}')">`).join('')}
+        </div>` : ''}
+      </div>`).join('');
+  }
+
+  // pagination
+  const pg = document.getElementById('entries-pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+  let html = `<button class="pg-btn" onclick="entriesPage--; renderEntriesPage()" ${entriesPage===1?'disabled':''}>← ก่อน</button>`;
+  for (let i = 1; i <= Math.min(total, 8); i++) {
+    html += `<button class="pg-btn ${i===entriesPage?'active':''}" onclick="entriesPage=${i}; renderEntriesPage()">${i}</button>`;
+  }
+  html += `<button class="pg-btn" onclick="entriesPage++; renderEntriesPage()" ${entriesPage===total?'disabled':''}>ถัดไป →</button>`;
+  pg.innerHTML = html;
+}
+
+// ─── SETTINGS ───
+function renderSettings() {
+  const logs = getAllLogs();
+  let size = 0;
+  for (let k in localStorage) {
+    if (localStorage.hasOwnProperty(k)) size += localStorage[k].length;
+  }
+  document.getElementById('storage-size').textContent = (size / 1024).toFixed(1) + ' KB';
+  document.getElementById('log-count-setting').textContent = logs.length + ' รายการ';
+}
+
+function changeAdminPass() {
+  const old = document.getElementById('old-pass').value;
+  const n1 = document.getElementById('new-pass').value;
+  const n2 = document.getElementById('new-pass2').value;
+  if (old !== getAdminPass()) { alert('รหัสเดิมไม่ถูกต้อง'); return; }
+  if (n1.length < 6) { alert('รหัสใหม่ต้องมีอย่างน้อย 6 ตัว'); return; }
+  if (n1 !== n2) { alert('รหัสใหม่ไม่ตรงกัน'); return; }
+  localStorage.setItem(ADMIN_PASS_KEY, n1);
+  alert('เปลี่ยนรหัสผ่านสำเร็จ!');
+  ['old-pass','new-pass','new-pass2'].forEach(id => document.getElementById(id).value = '');
+}
+
+function clearLogs() {
+  if (!confirm('ลบ Login Log ทั้งหมด?')) return;
+  localStorage.removeItem('journal_login_logs');
+  renderOverview();
+  renderLogs();
+  renderSettings();
+  alert('ล้าง Log แล้ว');
+}
+
+// ─── EXPORT ───
+function exportCSV(rows, filename) {
+  const csv = rows.map(r => r.map(c => `"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'}));
+  a.download = filename;
+  a.click();
+}
+
+function exportLogs() {
+  const logs = getAllLogs().reverse();
+  const rows = [['ชื่อ','กิจกรรม','วันที่','เวลา','Browser']];
+  logs.forEach(l => {
+    const d = new Date(l.ts);
+    rows.push([l.name, l.action, fmtDate(l.ts), fmtTime(d), parseBrowser(l.ua||'')]);
+  });
+  exportCSV(rows, 'login-logs.csv');
+}
+
+function exportUsers() {
+  const users = getAllUsers();
+  const logs = getAllLogs();
+  const userLogs = {};
+  logs.forEach(l => {
+    if (!userLogs[l.name]) userLogs[l.name] = [];
+    userLogs[l.name].push(l);
+  });
+  const rows = [['ชื่อ','จำนวน Login','Login ล่าสุด','รายการบันทึก']];
+  Object.keys(users).forEach(name => {
+    const ul = (userLogs[name]||[]).filter(l=>l.action==='login');
+    const last = ul.length ? fmtDateTime(new Date(ul[ul.length-1].ts)) : '';
+    rows.push([name, ul.length, last, getUserEntries(name).length]);
+  });
+  exportCSV(rows, 'users.csv');
+}
+
+function exportEntries() {
+  const users = getAllUsers();
+  const rows = [['ผู้ใช้','วันที่','เวลา','กิจกรรม','รายละเอียด','ปัญหา','วิธีแก้']];
+  Object.keys(users).forEach(name => {
+    getUserEntries(name).forEach(e => {
+      rows.push([name, e.date, e.time, e.activity, e.detail, e.problem, e.solution]);
+    });
+  });
+  exportCSV(rows, 'all-entries.csv');
+}
+
+// ─── HELPERS ───
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function fmtDate(ts) {
+  const d = new Date(ts);
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`;
+}
+
+function fmtTime(d) {
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function fmtDateTime(d) {
+  return `${fmtDate(d.toISOString())} ${fmtTime(d)}`;
+}
+
+function parseBrowser(ua) {
+  if (!ua) return '—';
+  if (ua.includes('Chrome')) return 'Chrome';
+  if (ua.includes('Firefox')) return 'Firefox';
+  if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+  if (ua.includes('Edge')) return 'Edge';
+  return ua.substring(0, 40);
+}
+
+function avatarHTML(u, name) {
+  const initial = name.charAt(0).toUpperCase();
+  if (u && u.avatar) {
+    return `<div class="avatar-sm"><img src="${u.avatar}" style="display:block" alt=""><span style="display:none">${initial}</span></div>`;
+  }
+  return `<div class="avatar-sm">${initial}</div>`;
+}
+
+function openLB(src) {
+  const lb = document.getElementById('lb');
+  document.getElementById('lb-img').src = src;
+  lb.style.display = 'flex';
+}
+</script>
+</body>
+</html>
