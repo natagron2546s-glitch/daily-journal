@@ -37,10 +37,33 @@
     line-height: 1.7;
   }
 
+  /* ─── LOADING ─── */
+  #loading-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d52 60%, #3d3353 100%);
+    flex-direction: column;
+    gap: 16px;
+    color: white;
+    font-size: 16px;
+  }
+
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   /* ─── LOGIN SCREEN ─── */
   #login-screen {
     min-height: 100vh;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #1a1a2e 0%, #2d2d52 60%, #3d3353 100%);
@@ -101,15 +124,8 @@
   }
 
   .avatar-preview:hover { border-color: var(--accent); }
-
-  .avatar-preview img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: none;
-  }
-
+  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
   .avatar-preview .avatar-icon { font-size: 32px; color: var(--ink-muted); }
-
   .avatar-hint { font-size: 12px; color: var(--ink-muted); }
 
   .field-group { margin-bottom: 16px; text-align: left; }
@@ -154,11 +170,11 @@
 
   .btn-primary:hover { background: var(--accent-hover); }
   .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
   /* ─── MAIN APP ─── */
   #app-screen { display: none; min-height: 100vh; }
 
-  /* Header */
   .app-header {
     background: var(--ink);
     color: white;
@@ -186,11 +202,6 @@
     letter-spacing: 0.02em;
   }
 
-  .header-user {
-    display: flex; align-items: center; gap: 10px;
-    cursor: pointer;
-  }
-
   .user-avatar {
     width: 36px; height: 36px;
     border-radius: 50%;
@@ -203,7 +214,6 @@
   }
 
   .user-avatar img { width: 100%; height: 100%; object-fit: cover; display: none; }
-
   .user-name { font-size: 14px; color: rgba(255,255,255,0.85); }
 
   .btn-logout {
@@ -220,7 +230,6 @@
 
   .btn-logout:hover { background: rgba(255,255,255,0.18); color: white; }
 
-  /* Layout */
   .app-body {
     max-width: 900px;
     margin: 0 auto;
@@ -231,7 +240,6 @@
     align-items: start;
   }
 
-  /* Sidebar */
   .sidebar { position: sticky; top: 90px; }
 
   .sidebar-card {
@@ -288,21 +296,6 @@
   .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
   .stat-label { font-size: 13px; color: var(--ink-muted); }
   .stat-val { font-size: 13px; font-weight: 600; color: var(--ink); }
-
-  /* New Entry Form */
-  .main-area {}
-
-  .section-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .section-head h2 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink);
-  }
 
   .new-entry-card {
     background: white;
@@ -363,7 +356,6 @@
     background: white;
   }
 
-  /* Image upload in form */
   .img-upload-area {
     border: 2px dashed var(--line);
     border-radius: var(--radius-sm);
@@ -375,7 +367,6 @@
   }
 
   .img-upload-area:hover { border-color: var(--accent); background: var(--accent-light); }
-
   .img-upload-area .upload-icon { font-size: 28px; margin-bottom: 6px; }
   .img-upload-area p { font-size: 13px; color: var(--ink-muted); }
   .img-upload-area strong { color: var(--accent); }
@@ -434,6 +425,7 @@
   }
 
   .btn-save:hover { background: var(--accent-hover); }
+  .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
 
   .btn-clear {
     padding: 10px 18px;
@@ -449,7 +441,6 @@
 
   .btn-clear:hover { border-color: var(--ink-muted); color: var(--ink); }
 
-  /* Entry List */
   .entries-list { display: flex; flex-direction: column; gap: 16px; }
 
   .entry-card {
@@ -564,7 +555,6 @@
 
   .entry-photo img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Empty state */
   .empty-state {
     text-align: center;
     padding: 48px 20px;
@@ -575,7 +565,6 @@
   .empty-state h3 { font-size: 16px; color: var(--ink-soft); margin-bottom: 6px; }
   .empty-state p { font-size: 13px; }
 
-  /* Toast */
   .toast {
     position: fixed;
     bottom: 28px;
@@ -597,7 +586,6 @@
   .toast.success { background: var(--green); }
   .toast.error { background: #c0392b; }
 
-  /* Lightbox */
   .lightbox {
     display: none;
     position: fixed; inset: 0;
@@ -608,6 +596,7 @@
 
   .lightbox.show { display: flex; }
   .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+
   .lightbox-close {
     position: absolute; top: 20px; right: 20px;
     font-size: 28px; color: white; cursor: pointer;
@@ -615,7 +604,6 @@
     width: 40px; height: 40px;
   }
 
-  /* Filter bar */
   .filter-bar {
     display: flex; gap: 8px;
     margin-bottom: 20px;
@@ -653,6 +641,18 @@
 
   .filter-date:focus { border-color: var(--accent); }
 
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .section-head h2 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
   @media (max-width: 700px) {
     .app-body { grid-template-columns: 1fr; }
     .sidebar { position: static; }
@@ -662,7 +662,13 @@
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <span>กำลังเชื่อมต่อ...</span>
+</div>
+
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-mark">📔</div>
@@ -685,14 +691,14 @@
 
     <div class="field-group">
       <label>รหัสผ่าน (ตั้งเองได้เลย)</label>
-      <input type="password" id="login-pass" placeholder="รหัสผ่านอย่างน้อย 4 ตัว">
+      <input type="password" id="login-pass" placeholder="รหัสผ่านอย่างน้อย 4 ตัว" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
 
-    <button class="btn-primary" onclick="doLogin()">เข้าสู่ระบบ / สมัครใช้งาน</button>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">เข้าสู่ระบบ / สมัครใช้งาน</button>
   </div>
 </div>
 
-<!-- ═══════════ APP ═══════════ -->
+<!-- APP -->
 <div id="app-screen">
   <header class="app-header">
     <div class="header-brand">
@@ -700,7 +706,7 @@
       <span class="brand-text">บันทึกประจำวัน</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
-      <div class="header-user">
+      <div style="display:flex;align-items:center;gap:10px;">
         <div class="user-avatar" id="header-avatar">
           <img id="header-avatar-img" alt="">
           <span id="header-avatar-initial"></span>
@@ -712,7 +718,6 @@
   </header>
 
   <div class="app-body">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-card">
         <h3>โปรไฟล์</h3>
@@ -753,9 +758,7 @@
       </div>
     </aside>
 
-    <!-- Main -->
-    <main class="main-area">
-      <!-- New Entry -->
+    <main>
       <div class="new-entry-card">
         <div class="card-header">✏️ บันทึกรายการใหม่</div>
         <div class="card-body">
@@ -800,12 +803,11 @@
 
           <div class="form-actions">
             <button class="btn-clear" onclick="clearForm()">ล้างฟอร์ม</button>
-            <button class="btn-save" onclick="saveEntry()">💾 บันทึก</button>
+            <button class="btn-save" id="save-btn" onclick="saveEntry()">💾 บันทึก</button>
           </div>
         </div>
       </div>
 
-      <!-- Entry List -->
       <div class="section-head">
         <h2>รายการทั้งหมด</h2>
       </div>
@@ -830,355 +832,384 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script>
-// ─── STATE ───
-let currentUser = null;
-let entries = [];
-let pendingImages = []; // base64 images for new entry
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, collection, doc, addDoc, getDocs, deleteDoc, query, where, orderBy, onSnapshot, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-// ─── INIT ───
-window.addEventListener('DOMContentLoaded', () => {
-  // set current time
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('f-time').value = `${hh}:${mm}`;
-
-  // restore session
-  const saved = localStorage.getItem('journal_user');
-  if (saved) {
-    currentUser = JSON.parse(saved);
-    loadUserEntries();
-    showApp();
-  }
-
-  updateDateDisplay();
-});
-
-// ─── DATE ───
-function updateDateDisplay() {
-  const now = new Date();
-  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
-    'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  const days = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
-
-  const el1 = document.getElementById('date-num');
-  const el2 = document.getElementById('date-month-yr');
-  const el3 = document.getElementById('sidebar-date-str');
-  if(el1) el1.textContent = now.getDate();
-  if(el2) el2.textContent = `${months[now.getMonth()]} ${now.getFullYear() + 543}`;
-  if(el3) el3.textContent = `วัน${days[now.getDay()]}ที่ ${now.getDate()} ${months[now.getMonth()]}`;
-}
-
-// ─── LOGIN AVATAR ───
-function previewLoginAvatar(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('login-avatar-preview');
-    const icon = document.querySelector('.avatar-icon');
-    img.src = e.target.result;
-    img.style.display = 'block';
-    icon.style.display = 'none';
+  const firebaseConfig = {
+    apiKey: "AIzaSyDaNqgB403lBTFWSynE-jp_SuwBbOocg_k",
+    authDomain: "daily-journal-77337.firebaseapp.com",
+    projectId: "daily-journal-77337",
+    storageBucket: "daily-journal-77337.firebasestorage.app",
+    messagingSenderId: "747488749345",
+    appId: "1:747488749345:web:07e8f7c6c0bf18a3290060",
+    measurementId: "G-FQ6MLBEH6G"
   };
-  reader.readAsDataURL(file);
-}
 
-// ─── LOGIN ───
-function doLogin() {
-  const name = document.getElementById('login-name').value.trim();
-  const pass = document.getElementById('login-pass').value.trim();
-  const avatarImg = document.getElementById('login-avatar-preview');
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  if (!name) { showToast('กรุณากรอกชื่อของคุณ', 'error'); return; }
-  if (pass.length < 4) { showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'error'); return; }
+  // ─── STATE ───
+  let currentUser = null;
+  let entries = [];
+  let pendingImages = [];
+  let unsubscribeEntries = null;
 
-  // check existing user
-  const users = JSON.parse(localStorage.getItem('journal_users') || '{}');
-  if (users[name]) {
-    if (users[name].password !== pass) {
-      showToast('รหัสผ่านไม่ถูกต้อง', 'error');
-      return;
+  // ─── INIT ───
+  window.addEventListener('DOMContentLoaded', () => {
+    const now = new Date();
+    document.getElementById('f-time').value =
+      `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    updateDateDisplay();
+
+    // restore session
+    const saved = sessionStorage.getItem('journal_user');
+    if (saved) {
+      currentUser = JSON.parse(saved);
+      showApp();
+      subscribeEntries();
+    } else {
+      showLogin();
     }
-    currentUser = users[name];
-    if (avatarImg.src && avatarImg.style.display !== 'none') {
-      currentUser.avatar = avatarImg.src;
-      users[name].avatar = avatarImg.src;
-      localStorage.setItem('journal_users', JSON.stringify(users));
-    }
-  } else {
-    currentUser = {
-      name,
-      password: pass,
-      avatar: (avatarImg.src && avatarImg.style.display !== 'none') ? avatarImg.src : null
-    };
-    users[name] = currentUser;
-    localStorage.setItem('journal_users', JSON.stringify(users));
-    showToast('สร้างบัญชีสำเร็จ ยินดีต้อนรับ!', 'success');
-  }
-
-  localStorage.setItem('journal_user', JSON.stringify(currentUser));
-  recordLoginLog('login');
-  loadUserEntries();
-  showApp();
-}
-
-function doLogout() {
-  recordLoginLog('logout');
-  localStorage.removeItem('journal_user');
-  currentUser = null;
-  entries = [];
-  document.getElementById('app-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-name').value = '';
-  document.getElementById('login-pass').value = '';
-}
-
-// ─── LOGIN LOG (shared across all users, readable by admin) ───
-function recordLoginLog(action) {
-  if (!currentUser) return;
-  const logs = JSON.parse(localStorage.getItem('journal_login_logs') || '[]');
-  logs.push({
-    name: currentUser.name,
-    action, // 'login' | 'logout'
-    ts: new Date().toISOString(),
-    ua: navigator.userAgent.substring(0, 120)
   });
-  // keep last 2000 entries
-  if (logs.length > 2000) logs.splice(0, logs.length - 2000);
-  localStorage.setItem('journal_login_logs', JSON.stringify(logs));
-}
 
-function loadUserEntries() {
-  const key = `journal_entries_${currentUser.name}`;
-  entries = JSON.parse(localStorage.getItem(key) || '[]');
-}
-
-function saveUserEntries() {
-  const key = `journal_entries_${currentUser.name}`;
-  localStorage.setItem(key, JSON.stringify(entries));
-}
-
-// ─── SHOW APP ───
-function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app-screen').style.display = 'block';
-
-  // set user info
-  const name = currentUser.name;
-  const initial = name.charAt(0).toUpperCase();
-
-  document.getElementById('header-name').textContent = name;
-  document.getElementById('header-avatar-initial').textContent = initial;
-  document.getElementById('sidebar-name').textContent = name;
-  document.getElementById('sidebar-avatar-initial').textContent = initial;
-
-  if (currentUser.avatar) {
-    ['header-avatar-img','sidebar-avatar-img'].forEach(id => {
-      const img = document.getElementById(id);
-      img.src = currentUser.avatar;
-      img.style.display = 'block';
-      img.previousElementSibling && (img.previousElementSibling.style.display = 'none');
-    });
-    document.getElementById('header-avatar-initial').style.display = 'none';
-    document.getElementById('sidebar-avatar-initial').style.display = 'none';
+  function showLogin() {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
   }
 
-  renderEntries();
-}
+  function showApp() {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
 
-// ─── ENTRY IMAGES ───
-function handleEntryImages(event) {
-  const files = Array.from(event.target.files);
-  files.forEach(file => {
+    const name = currentUser.name;
+    const initial = name.charAt(0).toUpperCase();
+
+    document.getElementById('header-name').textContent = name;
+    document.getElementById('header-avatar-initial').textContent = initial;
+    document.getElementById('sidebar-name').textContent = name;
+    document.getElementById('sidebar-avatar-initial').textContent = initial;
+
+    if (currentUser.avatar) {
+      ['header-avatar-img','sidebar-avatar-img'].forEach(id => {
+        const img = document.getElementById(id);
+        img.src = currentUser.avatar;
+        img.style.display = 'block';
+      });
+      document.getElementById('header-avatar-initial').style.display = 'none';
+      document.getElementById('sidebar-avatar-initial').style.display = 'none';
+    }
+  }
+
+  // ─── DATE DISPLAY ───
+  function updateDateDisplay() {
+    const now = new Date();
+    const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+      'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+    const days = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+    document.getElementById('date-num').textContent = now.getDate();
+    document.getElementById('date-month-yr').textContent = `${months[now.getMonth()]} ${now.getFullYear()+543}`;
+    document.getElementById('sidebar-date-str').textContent = `วัน${days[now.getDay()]}ที่ ${now.getDate()} ${months[now.getMonth()]}`;
+  }
+
+  // ─── AVATAR PREVIEW ───
+  window.previewLoginAvatar = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
-      pendingImages.push(e.target.result);
-      renderImagePreviews();
+      const img = document.getElementById('login-avatar-preview');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.querySelector('.avatar-icon').style.display = 'none';
     };
     reader.readAsDataURL(file);
-  });
-  event.target.value = '';
-}
-
-function renderImagePreviews() {
-  const grid = document.getElementById('img-preview-grid');
-  grid.innerHTML = pendingImages.map((src, i) => `
-    <div class="preview-thumb">
-      <img src="${src}" alt="รูป ${i+1}">
-      <button class="remove-img" onclick="removeImage(${i})">✕</button>
-    </div>
-  `).join('');
-}
-
-function removeImage(i) {
-  pendingImages.splice(i, 1);
-  renderImagePreviews();
-}
-
-// ─── SAVE ENTRY ───
-function saveEntry() {
-  const activity = document.getElementById('f-activity').value.trim();
-  const time = document.getElementById('f-time').value;
-  const detail = document.getElementById('f-detail').value.trim();
-  const problem = document.getElementById('f-problem').value.trim();
-  const solution = document.getElementById('f-solution').value.trim();
-
-  if (!activity) { showToast('กรุณาระบุกิจกรรมที่ทำ', 'error'); return; }
-  if (!time) { showToast('กรุณาระบุเวลา', 'error'); return; }
-
-  const now = new Date();
-  const entry = {
-    id: Date.now(),
-    date: now.toISOString().split('T')[0],
-    time,
-    activity,
-    detail,
-    problem,
-    solution,
-    images: [...pendingImages],
-    createdAt: now.toISOString()
   };
 
-  entries.unshift(entry);
-  saveUserEntries();
-  clearForm();
-  renderEntries();
-  showToast('✅ บันทึกสำเร็จ!', 'success');
-}
+  // ─── LOGIN ───
+  window.doLogin = async function() {
+    const name = document.getElementById('login-name').value.trim();
+    const pass = document.getElementById('login-pass').value.trim();
+    const avatarImg = document.getElementById('login-avatar-preview');
 
-// ─── CLEAR FORM ───
-function clearForm() {
-  ['f-activity','f-detail','f-problem','f-solution'].forEach(id => document.getElementById(id).value = '');
-  const now = new Date();
-  document.getElementById('f-time').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  pendingImages = [];
-  renderImagePreviews();
-}
+    if (!name) { showToast('กรุณากรอกชื่อของคุณ', 'error'); return; }
+    if (pass.length < 4) { showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'error'); return; }
 
-// ─── DELETE ENTRY ───
-function deleteEntry(id) {
-  if (!confirm('ลบรายการนี้?')) return;
-  entries = entries.filter(e => e.id !== id);
-  saveUserEntries();
-  renderEntries();
-  showToast('ลบรายการแล้ว');
-}
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังเข้าสู่ระบบ...';
 
-// ─── RENDER ENTRIES ───
-function renderEntries() {
-  const search = document.getElementById('search-input').value.toLowerCase();
-  const dateF = document.getElementById('date-filter').value;
+    try {
+      const userRef = doc(db, 'users', name);
+      const userSnap = await getDoc(userRef);
 
-  let filtered = entries.filter(e => {
-    const matchSearch = !search ||
-      e.activity.toLowerCase().includes(search) ||
-      (e.detail && e.detail.toLowerCase().includes(search)) ||
-      (e.problem && e.problem.toLowerCase().includes(search)) ||
-      (e.solution && e.solution.toLowerCase().includes(search));
-    const matchDate = !dateF || e.date === dateF;
-    return matchSearch && matchDate;
-  });
+      const avatarData = (avatarImg.src && avatarImg.style.display !== 'none') ? avatarImg.src : null;
 
-  const list = document.getElementById('entries-list');
-  const todayStr = new Date().toISOString().split('T')[0];
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        if (userData.password !== pass) {
+          showToast('รหัสผ่านไม่ถูกต้อง', 'error');
+          btn.disabled = false;
+          btn.textContent = 'เข้าสู่ระบบ / สมัครใช้งาน';
+          return;
+        }
+        currentUser = { name, password: pass, avatar: avatarData || userData.avatar || null };
+        if (avatarData) {
+          await setDoc(userRef, { avatar: avatarData }, { merge: true });
+        }
+      } else {
+        // สมัครใหม่
+        currentUser = { name, password: pass, avatar: avatarData };
+        await setDoc(userRef, {
+          name,
+          password: pass,
+          avatar: avatarData,
+          createdAt: serverTimestamp()
+        });
+        showToast('สร้างบัญชีสำเร็จ ยินดีต้อนรับ!', 'success');
+      }
 
-  if (filtered.length === 0) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <h3>${entries.length === 0 ? 'ยังไม่มีรายการ' : 'ไม่พบรายการที่ค้นหา'}</h3>
-        <p>${entries.length === 0 ? 'เริ่มบันทึกกิจกรรมแรกของคุณได้เลย!' : 'ลองเปลี่ยนคำค้นหาหรือวันที่'}</p>
-      </div>`;
-  } else {
-    list.innerHTML = filtered.map(e => renderEntryCard(e)).join('');
+      // บันทึก log
+      await addDoc(collection(db, 'login_logs'), {
+        name,
+        action: 'login',
+        ts: new Date().toISOString(),
+        ua: navigator.userAgent.substring(0, 120)
+      });
+
+      sessionStorage.setItem('journal_user', JSON.stringify(currentUser));
+      showApp();
+      subscribeEntries();
+    } catch (err) {
+      console.error(err);
+      showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'เข้าสู่ระบบ / สมัครใช้งาน';
+    }
+  };
+
+  window.doLogout = async function() {
+    if (currentUser) {
+      await addDoc(collection(db, 'login_logs'), {
+        name: currentUser.name,
+        action: 'logout',
+        ts: new Date().toISOString(),
+        ua: navigator.userAgent.substring(0, 120)
+      });
+    }
+    if (unsubscribeEntries) unsubscribeEntries();
+    sessionStorage.removeItem('journal_user');
+    currentUser = null;
+    entries = [];
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-name').value = '';
+    document.getElementById('login-pass').value = '';
+  };
+
+  // ─── REALTIME ENTRIES ───
+  function subscribeEntries() {
+    if (unsubscribeEntries) unsubscribeEntries();
+    const q = query(
+      collection(db, 'entries'),
+      where('owner', '==', currentUser.name),
+      orderBy('createdAt', 'desc')
+    );
+    unsubscribeEntries = onSnapshot(q, snap => {
+      entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderEntries();
+    });
   }
 
-  // stats
-  document.getElementById('stat-total').textContent = entries.length;
-  document.getElementById('stat-today').textContent = entries.filter(e => e.date === todayStr).length;
-  document.getElementById('stat-photos').textContent = entries.filter(e => e.images && e.images.length > 0).length;
-  document.getElementById('stat-solved').textContent = entries.filter(e => e.solution && e.solution.trim()).length;
-}
+  // ─── IMAGES ───
+  window.handleEntryImages = function(event) {
+    const files = Array.from(event.target.files);
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        pendingImages.push(e.target.result);
+        renderImagePreviews();
+      };
+      reader.readAsDataURL(file);
+    });
+    event.target.value = '';
+  };
 
-function renderEntryCard(e) {
-  const dateFormatted = formatDate(e.date);
-  const photosHtml = e.images && e.images.length > 0
-    ? `<div class="entry-photos">${e.images.map(src =>
-        `<div class="entry-photo" onclick="openLightbox('${src}')"><img src="${src}" alt="รูปภาพ"></div>`
-      ).join('')}</div>` : '';
+  function renderImagePreviews() {
+    const grid = document.getElementById('img-preview-grid');
+    grid.innerHTML = pendingImages.map((src, i) => `
+      <div class="preview-thumb">
+        <img src="${src}" alt="รูป ${i+1}">
+        <button class="remove-img" onclick="removeImage(${i})">✕</button>
+      </div>
+    `).join('');
+  }
 
-  return `
-  <div class="entry-card" id="entry-${e.id}">
-    <div class="entry-head">
-      <div class="entry-meta">
-        <div class="entry-activity">${esc(e.activity)}</div>
-        <div class="entry-badges">
-          <span class="badge badge-time">🕐 ${e.time} น.</span>
-          <span class="badge badge-date">📅 ${dateFormatted}</span>
+  window.removeImage = function(i) {
+    pendingImages.splice(i, 1);
+    renderImagePreviews();
+  };
+
+  // ─── SAVE ENTRY ───
+  window.saveEntry = async function() {
+    const activity = document.getElementById('f-activity').value.trim();
+    const time = document.getElementById('f-time').value;
+    const detail = document.getElementById('f-detail').value.trim();
+    const problem = document.getElementById('f-problem').value.trim();
+    const solution = document.getElementById('f-solution').value.trim();
+
+    if (!activity) { showToast('กรุณาระบุกิจกรรมที่ทำ', 'error'); return; }
+    if (!time) { showToast('กรุณาระบุเวลา', 'error'); return; }
+
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึก...';
+
+    try {
+      const now = new Date();
+      await addDoc(collection(db, 'entries'), {
+        owner: currentUser.name,
+        date: now.toISOString().split('T')[0],
+        time,
+        activity,
+        detail,
+        problem,
+        solution,
+        images: [...pendingImages],
+        createdAt: serverTimestamp()
+      });
+      clearForm();
+      showToast('✅ บันทึกสำเร็จ!', 'success');
+    } catch (err) {
+      showToast('บันทึกไม่สำเร็จ: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 บันทึก';
+    }
+  };
+
+  window.clearForm = function() {
+    ['f-activity','f-detail','f-problem','f-solution'].forEach(id => document.getElementById(id).value = '');
+    const now = new Date();
+    document.getElementById('f-time').value =
+      `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    pendingImages = [];
+    renderImagePreviews();
+  };
+
+  // ─── DELETE ───
+  window.deleteEntry = async function(id) {
+    if (!confirm('ลบรายการนี้?')) return;
+    await deleteDoc(doc(db, 'entries', id));
+    showToast('ลบรายการแล้ว');
+  };
+
+  // ─── RENDER ───
+  window.renderEntries = function() {
+    const search = document.getElementById('search-input').value.toLowerCase();
+    const dateF = document.getElementById('date-filter').value;
+
+    let filtered = entries.filter(e => {
+      const matchSearch = !search ||
+        e.activity.toLowerCase().includes(search) ||
+        (e.detail && e.detail.toLowerCase().includes(search)) ||
+        (e.problem && e.problem.toLowerCase().includes(search)) ||
+        (e.solution && e.solution.toLowerCase().includes(search));
+      const matchDate = !dateF || e.date === dateF;
+      return matchSearch && matchDate;
+    });
+
+    const list = document.getElementById('entries-list');
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h3>${entries.length === 0 ? 'ยังไม่มีรายการ' : 'ไม่พบรายการที่ค้นหา'}</h3>
+          <p>${entries.length === 0 ? 'เริ่มบันทึกกิจกรรมแรกของคุณได้เลย!' : 'ลองเปลี่ยนคำค้นหาหรือวันที่'}</p>
+        </div>`;
+    } else {
+      list.innerHTML = filtered.map(e => renderEntryCard(e)).join('');
+    }
+
+    document.getElementById('stat-total').textContent = entries.length;
+    document.getElementById('stat-today').textContent = entries.filter(e => e.date === todayStr).length;
+    document.getElementById('stat-photos').textContent = entries.filter(e => e.images && e.images.length > 0).length;
+    document.getElementById('stat-solved').textContent = entries.filter(e => e.solution && e.solution.trim()).length;
+  };
+
+  function renderEntryCard(e) {
+    const photosHtml = e.images && e.images.length > 0
+      ? `<div class="entry-photos">${e.images.map(src =>
+          `<div class="entry-photo" onclick="openLightbox('${src}')"><img src="${src}" alt="รูป"></div>`
+        ).join('')}</div>` : '';
+
+    return `
+    <div class="entry-card">
+      <div class="entry-head">
+        <div class="entry-meta">
+          <div class="entry-activity">${esc(e.activity)}</div>
+          <div class="entry-badges">
+            <span class="badge badge-time">🕐 ${e.time} น.</span>
+            <span class="badge badge-date">📅 ${formatDate(e.date)}</span>
+          </div>
+        </div>
+        <div class="entry-actions">
+          <button class="btn-icon danger" onclick="deleteEntry('${e.id}')" title="ลบ">🗑️</button>
         </div>
       </div>
-      <div class="entry-actions">
-        <button class="btn-icon danger" onclick="deleteEntry(${e.id})" title="ลบ">🗑️</button>
+      <div class="entry-body">
+        ${e.detail ? `<div class="entry-section"><div class="entry-section-label">สิ่งที่ทำ</div><div class="entry-section-content">${esc(e.detail)}</div></div>` : ''}
+        ${e.problem ? `<div class="entry-section problem"><div class="entry-section-label">🔴 ปัญหาที่พบ</div><div class="entry-section-content">${esc(e.problem)}</div></div>` : ''}
+        ${e.solution ? `<div class="entry-section solution"><div class="entry-section-label">🟢 วิธีแก้ปัญหา</div><div class="entry-section-content">${esc(e.solution)}</div></div>` : ''}
+        ${photosHtml}
       </div>
-    </div>
-    <div class="entry-body">
-      ${e.detail ? `
-      <div class="entry-section">
-        <div class="entry-section-label">สิ่งที่ทำ</div>
-        <div class="entry-section-content">${esc(e.detail)}</div>
-      </div>` : ''}
-      ${e.problem ? `
-      <div class="entry-section problem">
-        <div class="entry-section-label">🔴 ปัญหาที่พบ</div>
-        <div class="entry-section-content">${esc(e.problem)}</div>
-      </div>` : ''}
-      ${e.solution ? `
-      <div class="entry-section solution">
-        <div class="entry-section-label">🟢 วิธีแก้ปัญหา</div>
-        <div class="entry-section-content">${esc(e.solution)}</div>
-      </div>` : ''}
-      ${photosHtml}
-    </div>
-  </div>`;
-}
+    </div>`;
+  }
 
-function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-}
+  window.clearFilters = function() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('date-filter').value = '';
+    renderEntries();
+  };
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`;
-}
+  // ─── LIGHTBOX ───
+  window.openLightbox = function(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('show');
+  };
 
-// ─── FILTERS ───
-function clearFilters() {
-  document.getElementById('search-input').value = '';
-  document.getElementById('date-filter').value = '';
-  renderEntries();
-}
+  window.closeLightbox = function() {
+    document.getElementById('lightbox').classList.remove('show');
+  };
 
-// ─── LIGHTBOX ───
-function openLightbox(src) {
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox').classList.add('show');
-}
+  // ─── TOAST ───
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast${type ? ' '+type : ''}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
 
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('show');
-}
+  window.showToast = showToast;
 
-// ─── TOAST ───
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast${type ? ' '+type : ''}`;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
+  // ─── HELPERS ───
+  function esc(str) {
+    return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()+543}`;
+  }
 </script>
 </body>
 </html>
