@@ -60,8 +60,8 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ─── LOGIN SCREEN ─── */
-  #login-screen {
+  /* ─── AUTH SCREEN ─── */
+  #auth-screen {
     min-height: 100vh;
     display: none;
     align-items: center;
@@ -70,89 +70,249 @@
     padding: 20px;
   }
 
-  .login-box {
+  .auth-box {
     background: var(--page);
     border-radius: 20px;
-    padding: 48px 40px 40px;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
     box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  /* Tab switcher */
+  .auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--ink);
+  }
+
+  .auth-tab {
+    padding: 16px;
     text-align: center;
-  }
-
-  .login-mark {
-    width: 64px; height: 64px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 20px;
-    font-size: 28px;
-  }
-
-  .login-box h1 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-
-  .login-box p {
-    color: var(--ink-muted);
+    font-family: 'Sarabun', sans-serif;
     font-size: 14px;
-    margin-bottom: 32px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: color 0.2s, background 0.2s;
+    letter-spacing: 0.02em;
   }
 
-  .avatar-upload-zone {
+  .auth-tab.active {
+    color: white;
+    background: rgba(255,255,255,0.08);
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .auth-tab:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  /* Panel body */
+  .auth-panel { padding: 32px 32px 28px; }
+
+  .auth-brand {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
 
-  .avatar-preview {
-    width: 88px; height: 88px;
-    border-radius: 50%;
-    background: var(--page-warm);
-    border: 3px dashed var(--line);
+  .auth-mark {
+    width: 56px; height: 56px;
+    background: var(--accent);
+    border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    overflow: hidden;
-    transition: border-color 0.2s;
-    position: relative;
+    font-size: 26px;
+    margin-bottom: 10px;
   }
 
-  .avatar-preview:hover { border-color: var(--accent); }
-  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
-  .avatar-preview .avatar-icon { font-size: 32px; color: var(--ink-muted); }
-  .avatar-hint { font-size: 12px; color: var(--ink-muted); }
+  .auth-brand h2 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+  }
 
-  .field-group { margin-bottom: 16px; text-align: left; }
-
-  .field-group label {
-    display: block;
+  .auth-brand p {
     font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+
+  /* Avatar upload */
+  .avatar-upload-zone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: var(--page-warm);
+    border-radius: var(--radius-sm);
+    border: 1.5px dashed var(--line);
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .avatar-upload-zone:hover { border-color: var(--accent); }
+
+  .avatar-circle {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    font-size: 22px;
+  }
+
+  .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+  .avatar-upload-text { flex: 1; }
+  .avatar-upload-text strong { display: block; font-size: 13px; color: var(--ink-soft); }
+  .avatar-upload-text span { font-size: 12px; color: var(--ink-muted); }
+
+  .avatar-upload-btn {
+    padding: 6px 12px;
+    border: 1.5px solid var(--accent);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--accent);
+    font-size: 12px;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .avatar-upload-btn:hover { background: var(--accent-light); }
+
+  /* Form fields */
+  .field-group { margin-bottom: 16px; }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
     font-weight: 600;
     color: var(--ink-soft);
-    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
   }
 
-  .field-group input {
+  .field-wrap { position: relative; }
+
+  .field-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+
+  .field-wrap input {
     width: 100%;
-    padding: 12px 14px;
+    padding: 11px 14px 11px 38px;
     border: 1.5px solid var(--line);
     border-radius: var(--radius-sm);
     font-family: 'Sarabun', sans-serif;
     font-size: 15px;
     color: var(--ink);
     background: white;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     outline: none;
   }
 
-  .field-group input:focus { border-color: var(--accent); }
+  .field-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(194,113,79,0.12);
+  }
 
+  .field-wrap input.error { border-color: #e05252; }
+
+  /* Toggle password visibility */
+  .toggle-pass {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; font-size: 16px; color: var(--ink-muted);
+    padding: 0; line-height: 1;
+  }
+
+  .toggle-pass:hover { color: var(--ink); }
+
+  /* Password strength bar */
+  .pass-strength {
+    margin-top: 8px;
+    display: none;
+  }
+
+  .pass-strength.show { display: block; }
+
+  .strength-bar {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .strength-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s, background 0.3s;
+    width: 0;
+  }
+
+  .strength-label { font-size: 11px; color: var(--ink-muted); }
+
+  /* Confirm match indicator */
+  .match-hint { font-size: 11px; margin-top: 5px; display: none; }
+  .match-hint.show { display: block; }
+  .match-hint.ok { color: var(--green); }
+  .match-hint.no { color: #e05252; }
+
+  /* Terms checkbox */
+  .terms-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    background: var(--page-warm);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .terms-row input[type=checkbox] {
+    width: 16px; height: 16px;
+    margin-top: 2px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Divider */
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0;
+  }
+
+  .auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .auth-divider span { font-size: 12px; color: var(--ink-muted); }
+
+  /* Buttons */
   .btn-primary {
     width: 100%;
     padding: 13px;
@@ -165,14 +325,52 @@
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
-    margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
   }
 
   .btn-primary:hover { background: var(--accent-hover); }
   .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-  /* ─── MAIN APP ─── */
+  /* Error message */
+  .form-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #b91c1c;
+    margin-bottom: 16px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-error.show { display: flex; }
+
+  /* Footer note */
+  .auth-footer {
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+
+  .auth-footer button {
+    background: none; border: none;
+    color: var(--accent);
+    font-size: 13px;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .auth-footer button:hover { color: var(--accent-hover); }
+
+  /* ─── APP (same as before) ─── */
   #app-screen { display: none; min-height: 100vh; }
 
   .app-header {
@@ -189,12 +387,8 @@
     box-shadow: 0 2px 12px rgba(26,26,46,0.3);
   }
 
-  .header-brand {
-    display: flex; align-items: center; gap: 10px;
-  }
-
+  .header-brand { display: flex; align-items: center; gap: 10px; }
   .header-brand span:first-child { font-size: 20px; }
-
   .header-brand .brand-text {
     font-family: 'Noto Serif Thai', serif;
     font-size: 16px;
@@ -207,8 +401,7 @@
     border-radius: 50%;
     background: var(--accent);
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 14px; font-weight: 700;
     overflow: hidden;
     border: 2px solid rgba(255,255,255,0.2);
   }
@@ -252,29 +445,21 @@
   }
 
   .sidebar-card h3 {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
     color: var(--ink-muted);
     margin-bottom: 14px;
   }
 
-  .profile-display {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 16px;
-  }
+  .profile-display { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
 
   .profile-avatar-lg {
     width: 52px; height: 52px;
     border-radius: 50%;
     background: var(--accent-light);
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--accent);
-    overflow: hidden;
-    flex-shrink: 0;
+    font-size: 20px; font-weight: 700; color: var(--accent);
+    overflow: hidden; flex-shrink: 0;
   }
 
   .profile-avatar-lg img { width: 100%; height: 100%; object-fit: cover; display: none; }
@@ -311,8 +496,7 @@
     color: white;
     padding: 16px 20px;
     font-family: 'Noto Serif Thai', serif;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 15px; font-weight: 600;
     display: flex; align-items: center; gap: 8px;
   }
 
@@ -324,10 +508,8 @@
   .form-field { display: flex; flex-direction: column; gap: 6px; }
 
   .form-field label {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--ink-muted);
   }
 
@@ -338,11 +520,9 @@
     border: 1.5px solid var(--line);
     border-radius: var(--radius-sm);
     font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
+    font-size: 14px; color: var(--ink);
     background: var(--page);
-    resize: vertical;
-    outline: none;
+    resize: vertical; outline: none;
     transition: border-color 0.2s, background 0.2s;
     min-height: 42px;
   }
@@ -350,17 +530,12 @@
   .form-field textarea { min-height: 80px; }
 
   .form-field input:focus,
-  .form-field textarea:focus,
-  .form-field select:focus {
-    border-color: var(--accent);
-    background: white;
-  }
+  .form-field textarea:focus { border-color: var(--accent); background: white; }
 
   .img-upload-area {
     border: 2px dashed var(--line);
     border-radius: var(--radius-sm);
-    padding: 20px;
-    text-align: center;
+    padding: 20px; text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
     background: var(--page);
@@ -371,56 +546,31 @@
   .img-upload-area p { font-size: 13px; color: var(--ink-muted); }
   .img-upload-area strong { color: var(--accent); }
 
-  .preview-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 12px;
-  }
+  .preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 12px; }
 
-  .preview-thumb {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--line);
-  }
-
+  .preview-thumb { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: var(--line); }
   .preview-thumb img { width: 100%; height: 100%; object-fit: cover; }
-
   .preview-thumb .remove-img {
-    position: absolute;
-    top: 3px; right: 3px;
+    position: absolute; top: 3px; right: 3px;
     width: 20px; height: 20px;
     background: rgba(26,26,46,0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 11px;
-    cursor: pointer;
+    color: white; border: none; border-radius: 50%;
+    font-size: 11px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
 
   .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 16px;
+    display: flex; justify-content: flex-end; gap: 10px;
+    margin-top: 20px; padding-top: 16px;
     border-top: 1px solid var(--line);
   }
 
   .btn-save {
     padding: 10px 24px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
+    background: var(--accent); color: white;
+    border: none; border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
     display: flex; align-items: center; gap: 6px;
   }
 
@@ -429,14 +579,10 @@
 
   .btn-clear {
     padding: 10px 18px;
-    background: transparent;
-    color: var(--ink-muted);
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
-    transition: border-color 0.2s;
+    background: transparent; color: var(--ink-muted);
+    border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif; font-size: 14px;
+    cursor: pointer; transition: border-color 0.2s;
   }
 
   .btn-clear:hover { border-color: var(--ink-muted); color: var(--ink); }
@@ -444,142 +590,75 @@
   .entries-list { display: flex; flex-direction: column; gap: 16px; }
 
   .entry-card {
-    background: white;
-    border-radius: var(--radius);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    transition: box-shadow 0.2s;
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+    overflow: hidden; transition: box-shadow 0.2s;
   }
 
   .entry-card:hover { box-shadow: var(--shadow-md); }
 
   .entry-head {
     padding: 14px 18px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--line);
-    gap: 12px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 1px solid var(--line); gap: 12px;
   }
 
   .entry-meta { flex: 1; min-width: 0; }
-
-  .entry-activity {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-
+  .entry-activity { font-family: 'Noto Serif Thai', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .entry-badges { display: flex; gap: 6px; flex-wrap: wrap; }
 
   .badge {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 8px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 600;
+    padding: 3px 8px; border-radius: 100px;
+    font-size: 11px; font-weight: 600;
   }
 
   .badge-time { background: var(--page-warm); color: var(--ink-soft); }
   .badge-date { background: var(--accent-light); color: var(--accent); }
-
   .entry-actions { display: flex; gap: 4px; }
 
   .btn-icon {
-    width: 30px; height: 30px;
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
+    width: 30px; height: 30px; border: none; border-radius: 6px;
+    background: transparent; cursor: pointer; font-size: 14px;
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
-    flex-shrink: 0;
+    transition: background 0.15s; flex-shrink: 0;
   }
 
   .btn-icon:hover { background: var(--page-warm); }
   .btn-icon.danger:hover { background: #fde8e8; }
 
   .entry-body { padding: 14px 18px; }
-
   .entry-section { margin-bottom: 12px; }
   .entry-section:last-child { margin-bottom: 0; }
 
-  .entry-section-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
-    margin-bottom: 4px;
-  }
-
-  .entry-section-content {
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.6;
-  }
+  .entry-section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin-bottom: 4px; }
+  .entry-section-content { font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
 
   .entry-section.problem .entry-section-content {
-    color: #c0392b;
-    background: #fef5f5;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border-left: 3px solid #e74c3c;
+    color: #c0392b; background: #fef5f5; padding: 8px 10px; border-radius: 6px; border-left: 3px solid #e74c3c;
   }
 
   .entry-section.solution .entry-section-content {
-    color: var(--green);
-    background: var(--green-light);
-    padding: 8px 10px;
-    border-radius: 6px;
-    border-left: 3px solid var(--green);
+    color: var(--green); background: var(--green-light); padding: 8px 10px; border-radius: 6px; border-left: 3px solid var(--green);
   }
 
-  .entry-photos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 6px;
-    margin-top: 10px;
-  }
-
-  .entry-photo {
-    aspect-ratio: 1;
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-  }
-
+  .entry-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px,1fr)); gap: 6px; margin-top: 10px; }
+  .entry-photo { aspect-ratio: 1; border-radius: 6px; overflow: hidden; cursor: pointer; }
   .entry-photo img { width: 100%; height: 100%; object-fit: cover; }
 
-  .empty-state {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--ink-muted);
-  }
-
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--ink-muted); }
   .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
   .empty-state h3 { font-size: 16px; color: var(--ink-soft); margin-bottom: 6px; }
   .empty-state p { font-size: 13px; }
 
   .toast {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    background: var(--ink);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 14px;
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--ink); color: white;
+    padding: 12px 20px; border-radius: 10px; font-size: 14px;
     box-shadow: var(--shadow-lg);
-    transform: translateY(80px);
-    opacity: 0;
+    transform: translateY(80px); opacity: 0;
     transition: transform 0.3s, opacity 0.3s;
-    z-index: 999;
-    display: flex; align-items: center; gap: 8px;
+    z-index: 999; display: flex; align-items: center; gap: 8px;
   }
 
   .toast.show { transform: translateY(0); opacity: 1; }
@@ -587,10 +666,8 @@
   .toast.error { background: #c0392b; }
 
   .lightbox {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(10,10,20,0.9);
-    z-index: 500;
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,10,20,0.9); z-index: 500;
     align-items: center; justify-content: center;
   }
 
@@ -600,63 +677,39 @@
   .lightbox-close {
     position: absolute; top: 20px; right: 20px;
     font-size: 28px; color: white; cursor: pointer;
-    background: none; border: none;
-    width: 40px; height: 40px;
+    background: none; border: none; width: 40px; height: 40px;
   }
 
-  .filter-bar {
-    display: flex; gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 
   .filter-input {
-    flex: 1;
-    min-width: 160px;
+    flex: 1; min-width: 160px;
     padding: 9px 12px;
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 14px;
-    color: var(--ink);
-    background: white;
-    outline: none;
-    transition: border-color 0.2s;
+    border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif; font-size: 14px; color: var(--ink);
+    background: white; outline: none; transition: border-color 0.2s;
   }
 
   .filter-input:focus { border-color: var(--accent); }
 
   .filter-date {
     padding: 9px 12px;
-    border: 1.5px solid var(--line);
-    border-radius: var(--radius-sm);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 13px;
-    color: var(--ink);
-    background: white;
-    outline: none;
-    transition: border-color 0.2s;
-    cursor: pointer;
+    border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif; font-size: 13px; color: var(--ink);
+    background: white; outline: none; transition: border-color 0.2s; cursor: pointer;
   }
 
   .filter-date:focus { border-color: var(--accent); }
 
-  .section-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 20px;
-  }
+  .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 
-  .section-head h2 {
-    font-family: 'Noto Serif Thai', serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink);
-  }
+  .section-head h2 { font-family: 'Noto Serif Thai', serif; font-size: 20px; font-weight: 700; color: var(--ink); }
 
   @media (max-width: 700px) {
     .app-body { grid-template-columns: 1fr; }
     .sidebar { position: static; }
     .form-row { grid-template-columns: 1fr; }
+    .auth-panel { padding: 24px 20px 20px; }
   }
 </style>
 </head>
@@ -668,33 +721,131 @@
   <span>กำลังเชื่อมต่อ...</span>
 </div>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-mark">📔</div>
-    <h1>บันทึกประจำวัน</h1>
-    <p>ล็อคอินเพื่อเริ่มต้นบันทึกกิจกรรมของคุณ</p>
+<!-- AUTH (Login + Register) -->
+<div id="auth-screen">
+  <div class="auth-box">
 
-    <div class="avatar-upload-zone">
-      <div class="avatar-preview" onclick="document.getElementById('login-avatar-input').click()">
-        <img id="login-avatar-preview" alt="รูปโปรไฟล์">
-        <div class="avatar-icon">👤</div>
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">เข้าสู่ระบบ</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">สมัครสมาชิก</button>
+    </div>
+
+    <!-- ─── LOGIN PANEL ─── -->
+    <div class="auth-panel" id="panel-login">
+      <div class="auth-brand">
+        <div class="auth-mark">📔</div>
+        <h2>บันทึกประจำวัน</h2>
+        <p>เข้าสู่ระบบเพื่อดูบันทึกของคุณ</p>
       </div>
-      <span class="avatar-hint">แตะเพื่ออัปโหลดรูปโปรไฟล์ (ไม่บังคับ)</span>
-      <input type="file" id="login-avatar-input" accept="image/*" style="display:none" onchange="previewLoginAvatar(event)">
+
+      <div class="form-error" id="login-error">
+        <span>⚠️</span>
+        <span id="login-error-msg"></span>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">ชื่อผู้ใช้</div>
+        <div class="field-wrap">
+          <span class="field-icon">👤</span>
+          <input type="text" id="login-name" placeholder="ชื่อที่ใช้ลงทะเบียน" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">
+          รหัสผ่าน
+        </div>
+        <div class="field-wrap">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="login-pass" placeholder="รหัสผ่านของคุณ" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+          <button class="toggle-pass" type="button" onclick="togglePassVis('login-pass', this)" title="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">
+        <span>เข้าสู่ระบบ</span>
+      </button>
+
+      <div class="auth-footer">
+        ยังไม่มีบัญชี?
+        <button onclick="switchTab('register')">สมัครสมาชิกฟรี</button>
+      </div>
     </div>
 
-    <div class="field-group">
-      <label>ชื่อของคุณ</label>
-      <input type="text" id="login-name" placeholder="กรอกชื่อ–นามสกุล หรือชื่อเล่น" autocomplete="name">
+    <!-- ─── REGISTER PANEL ─── -->
+    <div class="auth-panel" id="panel-register" style="display:none;">
+      <div class="auth-brand">
+        <div class="auth-mark">✨</div>
+        <h2>สร้างบัญชีใหม่</h2>
+        <p>เริ่มบันทึกกิจกรรมประจำวันของคุณ</p>
+      </div>
+
+      <div class="form-error" id="register-error">
+        <span>⚠️</span>
+        <span id="register-error-msg"></span>
+      </div>
+
+      <!-- Avatar upload -->
+      <div class="avatar-upload-zone" onclick="document.getElementById('reg-avatar-input').click()">
+        <div class="avatar-circle">
+          <img id="reg-avatar-preview" alt="รูปโปรไฟล์">
+          <span id="reg-avatar-icon">👤</span>
+        </div>
+        <div class="avatar-upload-text">
+          <strong>รูปโปรไฟล์</strong>
+          <span>JPG, PNG — ไม่บังคับ</span>
+        </div>
+        <button class="avatar-upload-btn" type="button">เลือกรูป</button>
+      </div>
+      <input type="file" id="reg-avatar-input" accept="image/*" style="display:none" onchange="previewRegAvatar(event)">
+
+      <div class="field-group">
+        <div class="field-label">ชื่อผู้ใช้ <span style="color:var(--accent);font-size:10px;font-weight:600;text-transform:none;letter-spacing:0">* จำเป็น</span></div>
+        <div class="field-wrap">
+          <span class="field-icon">👤</span>
+          <input type="text" id="reg-name" placeholder="ชื่อ–นามสกุล หรือชื่อเล่น" autocomplete="username">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">รหัสผ่าน <span style="color:var(--accent);font-size:10px;font-weight:600;text-transform:none;letter-spacing:0">* อย่างน้อย 6 ตัว</span></div>
+        <div class="field-wrap">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="reg-pass" placeholder="ตั้งรหัสผ่านของคุณ" autocomplete="new-password" oninput="checkPassStrength(this.value)">
+          <button class="toggle-pass" type="button" onclick="togglePassVis('reg-pass', this)" title="แสดง/ซ่อน">👁️</button>
+        </div>
+        <div class="pass-strength" id="pass-strength">
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <div class="strength-label" id="strength-label">ความปลอดภัย: —</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">ยืนยันรหัสผ่าน</div>
+        <div class="field-wrap">
+          <span class="field-icon">🔐</span>
+          <input type="password" id="reg-pass-confirm" placeholder="กรอกรหัสผ่านอีกครั้ง" autocomplete="new-password" oninput="checkConfirm(this.value)" onkeydown="if(event.key==='Enter')doRegister()">
+          <button class="toggle-pass" type="button" onclick="togglePassVis('reg-pass-confirm', this)" title="แสดง/ซ่อน">👁️</button>
+        </div>
+        <div class="match-hint" id="match-hint"></div>
+      </div>
+
+      <div class="terms-row">
+        <input type="checkbox" id="reg-terms">
+        <label for="reg-terms">ฉันยอมรับว่าข้อมูลที่บันทึกจะถูกเก็บในระบบ และรหัสผ่านนี้ใช้สำหรับแอปนี้เท่านั้น</label>
+      </div>
+
+      <button class="btn-primary" id="register-btn" onclick="doRegister()">
+        <span>สร้างบัญชีและเข้าสู่ระบบ</span>
+      </button>
+
+      <div class="auth-footer">
+        มีบัญชีอยู่แล้ว?
+        <button onclick="switchTab('login')">เข้าสู่ระบบ</button>
+      </div>
     </div>
 
-    <div class="field-group">
-      <label>รหัสผ่าน (ตั้งเองได้เลย)</label>
-      <input type="password" id="login-pass" placeholder="รหัสผ่านอย่างน้อย 4 ตัว" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-
-    <button class="btn-primary" id="login-btn" onclick="doLogin()">เข้าสู่ระบบ / สมัครใช้งาน</button>
   </div>
 </div>
 
@@ -835,7 +986,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-  import { getFirestore, collection, doc, addDoc, getDocs, deleteDoc, query, where, orderBy, onSnapshot, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, collection, doc, addDoc, deleteDoc, query, where, orderBy, onSnapshot, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDaNqgB403lBTFWSynE-jp_SuwBbOocg_k",
@@ -850,7 +1001,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ─── STATE ───
   let currentUser = null;
   let entries = [];
   let pendingImages = [];
@@ -864,25 +1014,24 @@
 
     updateDateDisplay();
 
-    // restore session
     const saved = sessionStorage.getItem('journal_user');
     if (saved) {
       currentUser = JSON.parse(saved);
       showApp();
       subscribeEntries();
     } else {
-      showLogin();
+      showAuth();
     }
   });
 
-  function showLogin() {
+  function showAuth() {
     document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('auth-screen').style.display = 'flex';
   }
 
   function showApp() {
     document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
 
     const name = currentUser.name;
@@ -904,6 +1053,17 @@
     }
   }
 
+  // ─── TAB SWITCH ───
+  window.switchTab = function(tab) {
+    document.getElementById('panel-login').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('panel-register').style.display = tab === 'register' ? 'block' : 'none';
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    // clear errors
+    document.getElementById('login-error').classList.remove('show');
+    document.getElementById('register-error').classList.remove('show');
+  };
+
   // ─── DATE DISPLAY ───
   function updateDateDisplay() {
     const now = new Date();
@@ -915,67 +1075,168 @@
     document.getElementById('sidebar-date-str').textContent = `วัน${days[now.getDay()]}ที่ ${now.getDate()} ${months[now.getMonth()]}`;
   }
 
-  // ─── AVATAR PREVIEW ───
-  window.previewLoginAvatar = function(event) {
+  // ─── AVATAR PREVIEW (Register) ───
+  window.previewRegAvatar = function(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
-      const img = document.getElementById('login-avatar-preview');
+      const img = document.getElementById('reg-avatar-preview');
       img.src = e.target.result;
       img.style.display = 'block';
-      document.querySelector('.avatar-icon').style.display = 'none';
+      document.getElementById('reg-avatar-icon').style.display = 'none';
     };
     reader.readAsDataURL(file);
   };
 
-  // ─── LOGIN ───
-  window.doLogin = async function() {
-    const name = document.getElementById('login-name').value.trim();
-    const pass = document.getElementById('login-pass').value.trim();
-    const avatarImg = document.getElementById('login-avatar-preview');
+  // ─── PASSWORD UTILS ───
+  window.togglePassVis = function(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁️';
+    }
+  };
 
-    if (!name) { showToast('กรุณากรอกชื่อของคุณ', 'error'); return; }
-    if (pass.length < 4) { showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'error'); return; }
+  window.checkPassStrength = function(val) {
+    const bar = document.getElementById('pass-strength');
+    const fill = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+    bar.classList.add('show');
 
-    const btn = document.getElementById('login-btn');
+    let score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val) || /[ก-ฮ]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9ก-ฮ]/.test(val)) score++;
+
+    const levels = [
+      { pct: '0%',   color: 'transparent', text: '—' },
+      { pct: '25%',  color: '#e05252', text: 'อ่อนมาก' },
+      { pct: '50%',  color: '#e08c2e', text: 'อ่อน' },
+      { pct: '75%',  color: '#d4b220', text: 'ปานกลาง' },
+      { pct: '90%',  color: '#4a9c5e', text: 'แข็งแรง' },
+      { pct: '100%', color: '#2e7d55', text: 'แข็งแรงมาก' },
+    ];
+
+    const lv = levels[Math.min(score, 5)];
+    fill.style.width = lv.pct;
+    fill.style.background = lv.color;
+    label.textContent = `ความปลอดภัย: ${lv.text}`;
+
+    // also recheck confirm
+    const confirm = document.getElementById('reg-pass-confirm').value;
+    if (confirm) checkConfirm(confirm);
+  };
+
+  window.checkConfirm = function(val) {
+    const pass = document.getElementById('reg-pass').value;
+    const hint = document.getElementById('match-hint');
+    if (!val) { hint.className = 'match-hint'; return; }
+    if (val === pass) {
+      hint.textContent = '✓ รหัสผ่านตรงกัน';
+      hint.className = 'match-hint show ok';
+    } else {
+      hint.textContent = '✗ รหัสผ่านไม่ตรงกัน';
+      hint.className = 'match-hint show no';
+    }
+  };
+
+  function showFormError(panelId, msg) {
+    const el = document.getElementById(panelId + '-error');
+    document.getElementById(panelId + '-error-msg').textContent = msg;
+    el.classList.add('show');
+  }
+
+  // ─── REGISTER ───
+  window.doRegister = async function() {
+    const name = document.getElementById('reg-name').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const confirm = document.getElementById('reg-pass-confirm').value;
+    const terms = document.getElementById('reg-terms').checked;
+    const avatarImg = document.getElementById('reg-avatar-preview');
+
+    if (!name) { showFormError('register', 'กรุณากรอกชื่อผู้ใช้'); return; }
+    if (pass.length < 6) { showFormError('register', 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'); return; }
+    if (pass !== confirm) { showFormError('register', 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'); return; }
+    if (!terms) { showFormError('register', 'กรุณายอมรับเงื่อนไขการใช้งานก่อน'); return; }
+
+    const btn = document.getElementById('register-btn');
     btn.disabled = true;
-    btn.textContent = 'กำลังเข้าสู่ระบบ...';
+    btn.querySelector('span').textContent = 'กำลังสร้างบัญชี...';
 
     try {
       const userRef = doc(db, 'users', name);
       const userSnap = await getDoc(userRef);
 
-      const avatarData = (avatarImg.src && avatarImg.style.display !== 'none') ? avatarImg.src : null;
-
       if (userSnap.exists()) {
-        const userData = userSnap.data();
-        if (userData.password !== pass) {
-          showToast('รหัสผ่านไม่ถูกต้อง', 'error');
-          btn.disabled = false;
-          btn.textContent = 'เข้าสู่ระบบ / สมัครใช้งาน';
-          return;
-        }
-        currentUser = { name, password: pass, avatar: avatarData || userData.avatar || null };
-        if (avatarData) {
-          await setDoc(userRef, { avatar: avatarData }, { merge: true });
-        }
-      } else {
-        // สมัครใหม่
-        currentUser = { name, password: pass, avatar: avatarData };
-        await setDoc(userRef, {
-          name,
-          password: pass,
-          avatar: avatarData,
-          createdAt: serverTimestamp()
-        });
-        showToast('สร้างบัญชีสำเร็จ ยินดีต้อนรับ!', 'success');
+        showFormError('register', `ชื่อ "${name}" ถูกใช้งานแล้ว กรุณาเลือกชื่ออื่น`);
+        return;
       }
 
-      // บันทึก log
-      await addDoc(collection(db, 'login_logs'), {
+      const avatarData = (avatarImg.src && avatarImg.style.display !== 'none') ? avatarImg.src : null;
+
+      await setDoc(userRef, {
         name,
-        action: 'login',
+        password: pass,
+        avatar: avatarData,
+        createdAt: serverTimestamp()
+      });
+
+      await addDoc(collection(db, 'login_logs'), {
+        name, action: 'register',
+        ts: new Date().toISOString(),
+        ua: navigator.userAgent.substring(0, 120)
+      });
+
+      currentUser = { name, password: pass, avatar: avatarData };
+      sessionStorage.setItem('journal_user', JSON.stringify(currentUser));
+      showToast('🎉 สร้างบัญชีสำเร็จ ยินดีต้อนรับ!', 'success');
+      showApp();
+      subscribeEntries();
+    } catch (err) {
+      showFormError('register', 'เกิดข้อผิดพลาด: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.querySelector('span').textContent = 'สร้างบัญชีและเข้าสู่ระบบ';
+    }
+  };
+
+  // ─── LOGIN ───
+  window.doLogin = async function() {
+    const name = document.getElementById('login-name').value.trim();
+    const pass = document.getElementById('login-pass').value;
+
+    if (!name) { showFormError('login', 'กรุณากรอกชื่อผู้ใช้'); return; }
+    if (!pass) { showFormError('login', 'กรุณากรอกรหัสผ่าน'); return; }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.querySelector('span').textContent = 'กำลังเข้าสู่ระบบ...';
+
+    try {
+      const userRef = doc(db, 'users', name);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        showFormError('login', `ไม่พบบัญชีชื่อ "${name}" — กรุณาสมัครสมาชิกก่อน`);
+        return;
+      }
+
+      const userData = userSnap.data();
+      if (userData.password !== pass) {
+        showFormError('login', 'รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่');
+        return;
+      }
+
+      currentUser = { name, password: pass, avatar: userData.avatar || null };
+
+      await addDoc(collection(db, 'login_logs'), {
+        name, action: 'login',
         ts: new Date().toISOString(),
         ua: navigator.userAgent.substring(0, 120)
       });
@@ -984,19 +1245,18 @@
       showApp();
       subscribeEntries();
     } catch (err) {
-      console.error(err);
-      showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+      showFormError('login', 'เกิดข้อผิดพลาด: ' + err.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'เข้าสู่ระบบ / สมัครใช้งาน';
+      btn.querySelector('span').textContent = 'เข้าสู่ระบบ';
     }
   };
 
+  // ─── LOGOUT ───
   window.doLogout = async function() {
     if (currentUser) {
       await addDoc(collection(db, 'login_logs'), {
-        name: currentUser.name,
-        action: 'logout',
+        name: currentUser.name, action: 'logout',
         ts: new Date().toISOString(),
         ua: navigator.userAgent.substring(0, 120)
       });
@@ -1006,9 +1266,12 @@
     currentUser = null;
     entries = [];
     document.getElementById('app-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
+    // Reset login form
     document.getElementById('login-name').value = '';
     document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').classList.remove('show');
+    switchTab('login');
+    showAuth();
   };
 
   // ─── REALTIME ENTRIES ───
@@ -1074,11 +1337,7 @@
       await addDoc(collection(db, 'entries'), {
         owner: currentUser.name,
         date: now.toISOString().split('T')[0],
-        time,
-        activity,
-        detail,
-        problem,
-        solution,
+        time, activity, detail, problem, solution,
         images: [...pendingImages],
         createdAt: serverTimestamp()
       });
@@ -1101,14 +1360,12 @@
     renderImagePreviews();
   };
 
-  // ─── DELETE ───
   window.deleteEntry = async function(id) {
     if (!confirm('ลบรายการนี้?')) return;
     await deleteDoc(doc(db, 'entries', id));
     showToast('ลบรายการแล้ว');
   };
 
-  // ─── RENDER ───
   window.renderEntries = function() {
     const search = document.getElementById('search-input').value.toLowerCase();
     const dateF = document.getElementById('date-filter').value;
@@ -1178,7 +1435,6 @@
     renderEntries();
   };
 
-  // ─── LIGHTBOX ───
   window.openLightbox = function(src) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').classList.add('show');
@@ -1188,7 +1444,6 @@
     document.getElementById('lightbox').classList.remove('show');
   };
 
-  // ─── TOAST ───
   function showToast(msg, type='') {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -1199,7 +1454,6 @@
 
   window.showToast = showToast;
 
-  // ─── HELPERS ───
   function esc(str) {
     return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   }
