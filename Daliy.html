@@ -97,8 +97,8 @@ header {
 /* Journal Entry Card */
 .entry-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; }
 .entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.entry-title { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.folder-badge { font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+.entry-title { font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; }
+.folder-badge { font-size: 11px; background: var(--accent-light); color: var(--accent); padding: 2px 8px; border-radius: 100px; font-weight: 500; margin-left: 8px; }
 .entry-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 .entry-body { font-size: 14px; color: var(--text-soft); line-height: 1.6; white-space: pre-wrap; }
 .block-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
@@ -121,12 +121,6 @@ header {
 }
 .modal-overlay.show .modal-content { transform: translateY(0); }
 .modal-header { font-family: 'Noto Serif Thai', serif; font-size: 18px; font-weight: 600; margin-bottom: 18px; display: flex; justify-content: space-between; }
-
-/* Image Upload Placeholder */
-.upload-btn {
-  border: 2px dashed var(--border); padding: 16px; text-align: center; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-soft); font-size: 13px; transition: border var(--transition);
-}
-.upload-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* Toast */
 .toast {
@@ -281,11 +275,9 @@ window.handleAuth = async function() {
   currentUser = username;
   localStorage.setItem('journal_user', currentUser);
   
-  // Save or Update user in DB
   const userRef = doc(db, 'users', currentUser);
   await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
 
-  // Log to login logs
   await addDoc(collection(db, 'login_logs'), {
     name: currentUser,
     action: 'login',
@@ -318,7 +310,6 @@ function initApp() {
   document.getElementById('app-container').style.display = 'flex';
   document.getElementById('display-name').textContent = currentUser;
   
-  // Setup Dicebear Avatar dynamically based on name
   document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser}`;
 
   // Realtime Folders listener
@@ -326,7 +317,6 @@ function initApp() {
     localFolders = [];
     snapshot.forEach(d => localFolders.push(d.data().name));
     renderFoldersUI();
-    updateEntryModalFolderDropdown();
   });
 
   // Realtime Journal Entries listener
@@ -335,11 +325,11 @@ function initApp() {
     localEntries = [];
     snapshot.forEach(d => localEntries.push({ id: d.id, ...d.data() }));
     renderEntries();
-    renderFoldersUI(); // Refresh count badge
+    renderFoldersUI();
   });
 }
 
-// ─── FOLDER MANAGEMENT ───
+// ─── FOLDER MANAGEMENT (แก้ไขเฉพาะส่วนนี้) ───
 window.addFolder = async function() {
   const folderInput = document.getElementById('new-folder-input');
   const folderName = folderInput.value.trim();
@@ -352,8 +342,8 @@ window.addFolder = async function() {
 
   try {
     await setDoc(doc(db, 'users', currentUser, 'folders', folderName), { name: folderName });
-    folderInput.value = ''; // เคลียร์ช่องพิมพ์
-    showToast('เพิ่มโฟลเดอร์สำเร็จแล้ว ✨', 'success'); // แสดงการแจ้งเตือน
+    folderInput.value = ''; // เคลียร์ช่องพิมพ์ว่างลง
+    showToast('เพิ่มโฟลเดอร์สำเร็จแล้ว ✨', 'success'); // แสดงข้อความเตือนความสำเร็จ
   } catch(e) {
     showToast('เกิดข้อผิดพลาดในการเพิ่มโฟลเดอร์', 'error');
   }
@@ -378,17 +368,18 @@ function renderFoldersUI() {
     `;
   });
   container.innerHTML = html;
-}
 
-function updateEntryModalFolderDropdown() {
+  // อัปเดตรายชื่อโฟลเดอร์ลงกล่องตัวเลือกในหน้าต่างเขียนบันทึกกิจกรรมด้วย
   const dropdown = document.getElementById('entry-folder');
-  dropdown.innerHTML = '<option value="">-- ไม่ระบุโฟลเดอร์ --</option>';
-  localFolders.forEach(folder => {
-    const opt = document.createElement('option');
-    opt.value = folder;
-    opt.textContent = folder;
-    dropdown.appendChild(opt);
-  });
+  if(dropdown) {
+    dropdown.innerHTML = '<option value="">-- ไม่ระบุโฟลเดอร์ --</option>';
+    localFolders.forEach(folder => {
+      const opt = document.createElement('option');
+      opt.value = folder;
+      opt.textContent = folder;
+      dropdown.appendChild(opt);
+    });
+  }
 }
 
 window.filterByFolder = function(folderName) {
@@ -404,7 +395,6 @@ window.openEntryModal = function() {
 
 window.closeEntryModal = function() {
   document.getElementById('entry-modal').classList.remove('show');
-  // Reset fields
   document.getElementById('entry-folder').value = '';
   document.getElementById('entry-activity').value = '';
   document.getElementById('entry-detail').value = '';
@@ -414,7 +404,7 @@ window.closeEntryModal = function() {
 };
 
 window.saveEntry = async function() {
-  const folder = document.getElementById('entry-folder').value;
+  const folder = document.getElementById('entry-folder').value; // รับค่าโฟลเดอร์ที่เลือก
   const activity = document.getElementById('entry-activity').value.trim();
   const detail = document.getElementById('entry-detail').value.trim();
   const problem = document.getElementById('entry-problem').value.trim();
@@ -434,7 +424,7 @@ window.saveEntry = async function() {
 
   const payload = {
     owner: currentUser,
-    folder: folder || '', // บันทึกข้อมูลโฟลเดอร์ลงไปในกิจกรรม
+    folder: folder || '', // บันทึกข้อมูลโฟลเดอร์ลงไปในข้อมูลกิจกรรมหลัก
     activity,
     detail,
     problem,
@@ -525,6 +515,7 @@ function showToast(msg, type='') {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
+window.showToast = showToast;
 
 /* ── HELPERS ── */
 function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
