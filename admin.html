@@ -117,7 +117,7 @@
     margin-bottom: 6px;
   }
 
-  .admin-field input {
+  .admin-field input, .admin-field textarea {
     width: 100%;
     padding: 11px 13px;
     background: var(--bg);
@@ -130,7 +130,7 @@
     transition: border-color 0.2s;
   }
 
-  .admin-field input:focus { border-color: var(--accent); }
+  .admin-field input:focus, .admin-field textarea:focus { border-color: var(--accent); }
 
   .btn-admin-login {
     width: 100%;
@@ -543,6 +543,20 @@
 
   .pg-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
   .pg-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  
+  /* Buttons for Edit/Delete */
+  .btn-action-sm {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    background: transparent;
+  }
+  .btn-edit { border: 1px solid var(--accent); color: var(--accent); }
+  .btn-edit:hover { background: var(--accent-dim); }
+  .btn-delete { border: 1px solid var(--red); color: var(--red); }
+  .btn-delete:hover { background: var(--red-dim); }
 </style>
 </head>
 <body>
@@ -759,13 +773,40 @@
   </div>
 </div>
 
+<!-- EDIT MODAL -->
+<div id="edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);padding:24px;border-radius:var(--radius);width:90%;max-width:500px;border:1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+    <h3 style="margin-bottom:16px;font-family:'Noto Serif Thai',serif;">✏️ แก้ไขรายการบันทึก</h3>
+    <div class="admin-field">
+      <label>กิจกรรม</label>
+      <input type="text" id="edit-activity">
+    </div>
+    <div class="admin-field">
+      <label>รายละเอียด</label>
+      <textarea id="edit-detail" rows="3"></textarea>
+    </div>
+    <div class="admin-field">
+      <label>ปัญหา</label>
+      <textarea id="edit-problem" rows="2"></textarea>
+    </div>
+    <div class="admin-field">
+      <label>วิธีแก้</label>
+      <textarea id="edit-solution" rows="2"></textarea>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+      <button class="btn-admin-out" onclick="closeEditModal()">ยกเลิก</button>
+      <button class="btn-export" onclick="saveEditEntry()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <div id="lb" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:999;align-items:center;justify-content:center;cursor:zoom-out;">
   <img id="lb-img" style="max-width:90vw;max-height:90vh;border-radius:8px;">
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-  import { getFirestore, collection, doc, getDocs, query, orderBy, getDoc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+  import { getFirestore, collection, doc, getDocs, query, orderBy, getDoc, setDoc, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDaNqgB403lBTFWSynE-jp_SuwBbOocg_k",
@@ -786,6 +827,7 @@
   let allUsers = {};
   let allLogs = [];
   let allEntries = [];
+  let currentEditId = null;
 
   // ─── AUTH ───
   function getAdminPass() {
@@ -1019,6 +1061,59 @@
   window.renderLogsPage = renderLogsPage;
   window.logsPage = logsPage;
 
+  // ─── EDIT & DELETE ENTRIES ───
+  window.openEditEntry = function(id) {
+    const entry = allEntries.find(e => e.id === id);
+    if(!entry) return;
+    currentEditId = id;
+    document.getElementById('edit-activity').value = entry.activity || '';
+    document.getElementById('edit-detail').value = entry.detail || '';
+    document.getElementById('edit-problem').value = entry.problem || '';
+    document.getElementById('edit-solution').value = entry.solution || '';
+    document.getElementById('edit-modal').style.display = 'flex';
+  };
+
+  window.closeEditModal = function() {
+    document.getElementById('edit-modal').style.display = 'none';
+    currentEditId = null;
+  };
+
+  window.saveEditEntry = async function() {
+    if(!currentEditId) return;
+    const updatedData = {
+      activity: document.getElementById('edit-activity').value,
+      detail: document.getElementById('edit-detail').value,
+      problem: document.getElementById('edit-problem').value,
+      solution: document.getElementById('edit-solution').value,
+    };
+    try {
+      await updateDoc(doc(db, 'entries', currentEditId), updatedData);
+      const idx = allEntries.findIndex(e => e.id === currentEditId);
+      if(idx !== -1) {
+        allEntries[idx] = { ...allEntries[idx], ...updatedData };
+      }
+      closeEditModal();
+      renderEntriesPage();
+      alert('บันทึกการแก้ไขเรียบร้อยแล้ว');
+    } catch(err) {
+      console.error(err);
+      alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+    }
+  };
+
+  window.deleteEntry = async function(id) {
+    if(!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการบันทึกนี้? การกระทำนี้ไม่สามารถกู้คืนได้')) return;
+    try {
+      await deleteDoc(doc(db, 'entries', id));
+      allEntries = allEntries.filter(e => e.id !== id);
+      document.getElementById('setting-entries').textContent = allEntries.length;
+      renderEntriesPage();
+    } catch(err) {
+      console.error(err);
+      alert('เกิดข้อผิดพลาดในการลบข้อมูล');
+    }
+  };
+
   // ─── ENTRIES ───
   let entriesPage = 1;
   const ENTRIES_PER_PAGE = 15;
@@ -1065,6 +1160,10 @@
               <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
                 👤 ${esc(e.owner)} &nbsp;·&nbsp; 📅 ${e.date} &nbsp;·&nbsp; 🕐 ${e.time} น.
               </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-action-sm btn-edit" onclick="openEditEntry('${e.id}')">✏️ แก้ไข</button>
+              <button class="btn-action-sm btn-delete" onclick="deleteEntry('${e.id}')">🗑️ ลบ</button>
             </div>
           </div>
           ${e.detail ? `<div class="ev-detail">${esc(e.detail)}</div>` : ''}
