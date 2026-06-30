@@ -228,6 +228,17 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 .fg-group{margin-bottom:6px}
 .fg-group .entries-list{gap:12px}
 
+/* QUICK FOLDER ASSIGN */
+.qf-wrap{position:relative;display:inline-block}
+.qf-pop{display:none;position:absolute;top:34px;right:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);width:200px;z-index:150;overflow:hidden}
+.qf-pop.show{display:block}
+.qf-head{padding:8px 12px;font-size:11px;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+.qf-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:13px;color:var(--ink-soft);transition:background .15s}
+.qf-item:hover{background:var(--bg-warm)}
+.qf-item.cur{background:var(--accent-light);color:var(--accent);font-weight:600}
+.qf-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.qf-empty{padding:10px 12px;font-size:12px;color:var(--ink-muted)}
+
 /* SECTION BAR */
 .sbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap}
 .sbar h2{font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
@@ -788,6 +799,7 @@ window.saveEntry = async () => {
   const btn = document.getElementById('save-btn');
   btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
   try {
+    const chosenFolder = document.getElementById('f-folder').value || '';
     await addDoc(collection(db,'entries'), {
       owner: myName,
       date: new Date().toISOString().split('T')[0],
@@ -796,12 +808,16 @@ window.saveEntry = async () => {
       detail: document.getElementById('f-det').value.trim(),
       problem: document.getElementById('f-prob').value.trim(),
       solution: document.getElementById('f-sol').value.trim(),
-      folderId: document.getElementById('f-folder').value || '',
+      folderId: chosenFolder,
       images: [...imgs],
       createdAt: serverTimestamp()
     });
     clearF();
-    toast('✅ บันทึกสำเร็จ!','ok');
+    if (!chosenFolder && folders.length > 0) {
+      toast('✅ บันทึกแล้ว (ยังไม่มีโฟลเดอร์ — กด 📁 ที่การ์ดเพื่อจัดหมวดทีหลังได้)','ok');
+    } else {
+      toast('✅ บันทึกสำเร็จ!','ok');
+    }
   } catch(e) { toast('บันทึกไม่สำเร็จ: '+e.message,'err'); }
   finally { btn.disabled = false; btn.textContent = '💾 บันทึก'; refreshSidebar(); }
 };
@@ -972,6 +988,13 @@ function renderCard(e) {
       </div>
       <div class="e-acts">
         ${isOwn ? `
+          <div class="qf-wrap">
+            <button class="bi" onclick="toggleQF(event,'${e.id}')" title="ย้ายโฟลเดอร์">📁</button>
+            <div class="qf-pop" id="qf-${e.id}">
+              <div class="qf-head">ย้ายไปโฟลเดอร์</div>
+              ${qfOptions(e)}
+            </div>
+          </div>
           <button class="bi ed" onclick="openEM('${e.id}')" title="แก้ไข">✏️</button>
           <button class="bi dl" onclick="delEntry('${e.id}','${ea(e.owner||'')}'" title="ลบ">🗑️</button>
         ` : ''}
@@ -986,6 +1009,41 @@ function renderCard(e) {
     </div>
   </div>`;
 }
+
+function qfOptions(e) {
+  const cur = e.folderId || '';
+  const noneItem = `<div class="qf-item${cur===''?' cur':''}" onclick="quickAssign('${e.id}','')">
+    <div class="qf-dot" style="background:#8888aa"></div>ไม่มีโฟลเดอร์
+  </div>`;
+  if (folders.length === 0) {
+    return noneItem + `<div class="qf-empty">ยังไม่มีโฟลเดอร์ — สร้างได้จากแถบซ้าย</div>`;
+  }
+  const items = folders.map(f => `
+    <div class="qf-item${cur===f.id?' cur':''}" onclick="quickAssign('${e.id}','${f.id}')">
+      <div class="qf-dot" style="background:${f.color}"></div>${esc(f.name)}
+    </div>`).join('');
+  return noneItem + items;
+}
+
+window.toggleQF = (ev, id) => {
+  ev.stopPropagation();
+  const pop = document.getElementById(`qf-${id}`);
+  const wasOpen = pop.classList.contains('show');
+  document.querySelectorAll('.qf-pop.show').forEach(p => p.classList.remove('show'));
+  if (!wasOpen) pop.classList.add('show');
+};
+
+window.quickAssign = async (id, folderId) => {
+  document.querySelectorAll('.qf-pop.show').forEach(p => p.classList.remove('show'));
+  try {
+    await updateDoc(doc(db,'entries',id), { folderId });
+    toast(folderId ? '📁 ย้ายโฟลเดอร์แล้ว' : 'นำออกจากโฟลเดอร์แล้ว','ok');
+  } catch(e) { toast('ผิดพลาด: '+e.message,'err'); }
+};
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.qf-pop.show').forEach(p => p.classList.remove('show'));
+});
 
 function updateStats() {
   const td = new Date().toISOString().split('T')[0];
