@@ -694,10 +694,13 @@ function updateHead() {
 function renderFolderSidebar() {
   const list = document.getElementById('folder-list');
   const allEl = document.getElementById('fi-all');
-  const otherView = !!(viewOwner && viewOwner !== myName) || vm === 'all';
+  /* Folders are always your own personal folders. Only hide/disable
+     creation when you're actively looking at someone else's entries
+     (viewOwner set to a name that isn't you). Browsing the "all" tab
+     without picking a specific person should NOT hide your folders. */
+  const lookingAtSomeoneElse = !!(viewOwner && viewOwner !== myName);
 
-  /* show/hide create button */
-  document.getElementById('btn-nf').style.display = otherView ? 'none' : '';
+  document.getElementById('btn-nf').style.display = (!myName || lookingAtSomeoneElse) ? 'none' : '';
 
   allEl.className = `fi-all${selFolder === null ? ' active' : ''}`;
   document.getElementById('cnt-all').textContent = entries.length;
@@ -705,7 +708,16 @@ function renderFolderSidebar() {
   /* remove old .fi items */
   list.querySelectorAll('.fi').forEach(el => el.remove());
 
-  if (otherView) return; /* don't show personal folders when viewing others */
+  if (!myName || lookingAtSomeoneElse) return; /* no personal folders to show */
+
+  if (folders.length === 0) {
+    const hint = document.createElement('div');
+    hint.style.cssText = 'font-size:12px;color:var(--ink-muted);padding:8px 4px;line-height:1.5';
+    hint.textContent = 'ยังไม่มีโฟลเดอร์ — กด "＋ สร้างโฟลเดอร์" ด้านบนเพื่อเริ่มสร้างหมวดหมู่';
+    hint.className = 'fi';
+    list.appendChild(hint);
+    return;
+  }
 
   folders.forEach(f => {
     const cnt = entries.filter(e => e.folderId === f.id).length;
