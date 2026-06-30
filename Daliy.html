@@ -411,6 +411,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 <div class="mo" id="em">
   <div class="mb wide">
     <h3>✏️ แก้ไขรายการ</h3>
+    <div id="e-owner-notice" style="display:none;align-items:center;gap:8px;padding:9px 12px;background:var(--bg-warm);border-radius:var(--radius-sm);font-size:12px;color:var(--ink-muted);margin-bottom:16px">
+      👤 รายการนี้บันทึกโดย <strong id="e-owner-name" style="color:var(--ink);margin-left:3px"></strong>
+    </div>
     <input type="hidden" id="e-id">
     <div class="mf"><label>กิจกรรม / สิ่งที่ทำ</label><input type="text" id="e-act" placeholder="กิจกรรม..."></div>
     <div class="mrow">
@@ -832,8 +835,15 @@ window.clearF = () => {
 /* EDIT MODAL */
 window.openEM = (id) => {
   const e = entries.find(x => x.id === id); if (!e) return;
-  if (e.owner !== myName) { toast('แก้ไขได้เฉพาะรายการของคุณ','err'); return; }
+  if (!myName) { toast('ระบุชื่อของคุณก่อนแก้ไข','err'); toggleNP(); return; }
   document.getElementById('e-id').value = id;
+  const notice = document.getElementById('e-owner-notice');
+  if (e.owner && e.owner !== myName) {
+    document.getElementById('e-owner-name').textContent = e.owner;
+    notice.style.display = 'flex';
+  } else {
+    notice.style.display = 'none';
+  }
   document.getElementById('e-act').value = e.activity || '';
   document.getElementById('e-time').value = e.time || '';
   document.getElementById('e-sum').value = e.summary || '';
@@ -897,7 +907,7 @@ window.delFromEdit = async () => {
 
 /* DELETE ENTRY */
 window.delEntry = async (id, owner) => {
-  if (owner !== myName) { toast('ลบได้เฉพาะรายการของคุณ','err'); return; }
+  if (!myName) { toast('ระบุชื่อของคุณก่อนลบ','err'); toggleNP(); return; }
   if (!confirm('ลบรายการนี้?')) return;
   await deleteDoc(doc(db,'entries',id));
   toast('ลบรายการแล้ว');
@@ -995,9 +1005,9 @@ function renderCard(e) {
               ${qfOptions(e)}
             </div>
           </div>
-          <button class="bi ed" onclick="openEM('${e.id}')" title="แก้ไข">✏️</button>
-          <button class="bi dl" onclick="delEntry('${e.id}','${ea(e.owner||'')}'" title="ลบ">🗑️</button>
         ` : ''}
+        <button class="bi ed" onclick="openEM('${e.id}')" title="แก้ไข">✏️</button>
+        <button class="bi dl" onclick="delEntry('${e.id}','${ea(e.owner||'')}'" title="ลบ">🗑️</button>
       </div>
     </div>
     <div class="ebody">
