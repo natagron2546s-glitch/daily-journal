@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -277,7 +277,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
     <div class="name-chip" onclick="toggleNP()">
       <div class="chip-av" id="chip-av">?</div>
-      <span class="chip-lbl" id="chip-lbl">ระบุชื่อของคุณ</span>
+      <span class="chip-lbl" id="chip-lbl">Set your name</span>
       <span class="chip-arr">▾</span>
     </div>
   </div>
@@ -285,19 +285,19 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 
 <!-- NAME PANEL -->
 <div class="name-panel" id="name-panel">
-  <div class="np-head">👤 เลือกชื่อ / เปลี่ยนผู้ใช้</div>
+  <div class="np-head">👤 Select name / Switch user</div>
   <div class="np-body">
     <div class="view-tabs">
-      <button class="view-tab active" id="vtab-my" onclick="setVM('my')">📝 ของฉัน</button>
-      <button class="view-tab" id="vtab-all" onclick="setVM('all')">🌐 ทุกคน</button>
+      <button class="view-tab active" id="vtab-my" onclick="setVM('my')">📝 Mine</button>
+      <button class="view-tab" id="vtab-all" onclick="setVM('all')">🌐 Everyone</button>
     </div>
     <div class="name-input-row">
-      <input class="ni" id="ni" placeholder="พิมพ์ชื่อของคุณ...">
-      <button class="btn-sn" onclick="applyName()">ตั้งชื่อ</button>
+      <input class="ni" id="ni" placeholder="Type your name...">
+      <button class="btn-sn" onclick="applyName()">Set Name</button>
     </div>
     <div class="np-div"></div>
-    <div class="np-lbl">ผู้ใช้ที่มีรายการ</div>
-    <div class="known-list" id="known-list"><div style="font-size:13px;color:var(--ink-muted);padding:6px 4px">กำลังโหลด...</div></div>
+    <div class="np-lbl">Users with entries</div>
+    <div class="known-list" id="known-list"><div style="font-size:13px;color:var(--ink-muted);padding:6px 4px">Loading...</div></div>
   </div>
 </div>
 
@@ -305,25 +305,25 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sc">
-      <h3>กำลังดู</h3>
+      <h3>Viewing</h3>
       <div class="profile-row">
         <div class="pav" id="pav">?</div>
         <div><div class="pname" id="pname">—</div><div class="psub" id="psub"></div></div>
       </div>
-      <div class="vbadge" id="vbadge"><div class="dot"></div><span class="vtxt" id="vtxt">โหมดดูส่วนตัว</span></div>
+      <div class="vbadge" id="vbadge"><div class="dot"></div><span class="vtxt" id="vtxt">Personal view mode</span></div>
       <div class="date-box"><div class="date-day" id="dday"></div><div class="date-sub" id="dsub"></div></div>
     </div>
 
     <!-- FOLDERS SIDEBAR -->
     <div class="sc">
       <div class="folder-head">
-        <h3>📁 โฟลเดอร์</h3>
-        <button class="btn-nf" id="btn-nf" onclick="openFM()">＋ สร้างโฟลเดอร์</button>
+        <h3>📁 Folders</h3>
+        <button class="btn-nf" id="btn-nf" onclick="openFM()">＋ New Folder</button>
       </div>
       <div class="folder-list" id="folder-list">
         <div class="fi-all active" id="fi-all" onclick="selF(null)">
           <div class="fdot" style="background:var(--ink-muted)"></div>
-          <span class="fn">ทั้งหมด</span>
+          <span class="fn">All</span>
           <span class="fc" id="cnt-all">0</span>
         </div>
       </div>
@@ -331,11 +331,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 
     <!-- STATS -->
     <div class="sc">
-      <h3>สถิติ</h3>
-      <div class="stat-row"><span class="stat-lbl">รายการทั้งหมด</span><span class="stat-val" id="st-total">0</span></div>
-      <div class="stat-row"><span class="stat-lbl">วันนี้</span><span class="stat-val" id="st-today">0</span></div>
-      <div class="stat-row"><span class="stat-lbl">มีรูปภาพ</span><span class="stat-val" id="st-photos">0</span></div>
-      <div class="stat-row"><span class="stat-lbl">แก้ปัญหาสำเร็จ</span><span class="stat-val" id="st-solved">0</span></div>
+      <h3>Statistics</h3>
+      <div class="stat-row"><span class="stat-lbl">Total entries</span><span class="stat-val" id="st-total">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Today</span><span class="stat-val" id="st-today">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">With photos</span><span class="stat-val" id="st-photos">0</span></div>
+      <div class="stat-row"><span class="stat-lbl">Solved</span><span class="stat-val" id="st-solved">0</span></div>
     </div>
   </aside>
 
@@ -343,51 +343,51 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
   <main>
     <div class="new-card">
       <div class="ch">
-        <span>✏️ บันทึกรายการใหม่</span>
+        <span>✏️ New Entry</span>
         <span class="ch-sub" id="ch-sub"></span>
       </div>
       <div class="cb">
-        <div class="rn" id="rn">👁️ คุณกำลังดูรายการของ <strong id="rn-own" style="margin:0 4px"></strong> — ตั้งชื่อของคุณเองเพื่อบันทึก</div>
+        <div class="rn" id="rn">👁️ You're viewing entries of <strong id="rn-own" style="margin:0 4px"></strong> — set your own name to save</div>
         <div class="fr three">
           <div class="ff" style="grid-column:span 2">
-            <label>กิจกรรม / สิ่งที่ทำ</label>
-            <input type="text" id="f-act" placeholder="เช่น ประชุมทีม, เขียนโค้ด...">
+            <label>Activity / What you did</label>
+            <input type="text" id="f-act" placeholder="e.g. team meeting, coding...">
           </div>
-          <div class="ff"><label>เวลา</label><input type="time" id="f-time"></div>
+          <div class="ff"><label>Time</label><input type="time" id="f-time"></div>
         </div>
         <div class="fr">
           <div class="ff">
-            <label>📁 โฟลเดอร์</label>
-            <select id="f-folder"><option value="">— ไม่ระบุ —</option></select>
+            <label>📁 Folder</label>
+            <select id="f-folder"><option value="">— None —</option></select>
           </div>
-          <div class="ff"><label>สรุปสั้น ๆ</label><input type="text" id="f-sum" placeholder="(ไม่บังคับ)"></div>
+          <div class="ff"><label>Short Summary</label><input type="text" id="f-sum" placeholder="(optional)"></div>
         </div>
-        <div class="fr full"><div class="ff"><label>รายละเอียด</label><textarea id="f-det" placeholder="อธิบายสิ่งที่ทำ..."></textarea></div></div>
+        <div class="fr full"><div class="ff"><label>Details</label><textarea id="f-det" placeholder="Describe what you did..."></textarea></div></div>
         <div class="fr">
-          <div class="ff"><label>🔴 ปัญหาที่พบ</label><textarea id="f-prob" placeholder="ปัญหา (ถ้ามี)"></textarea></div>
-          <div class="ff"><label>🟢 วิธีแก้</label><textarea id="f-sol" placeholder="วิธีแก้ปัญหา"></textarea></div>
+          <div class="ff"><label>🔴 Problem</label><textarea id="f-prob" placeholder="Problem (if any)"></textarea></div>
+          <div class="ff"><label>🟢 Solution</label><textarea id="f-sol" placeholder="Solution"></textarea></div>
         </div>
         <div class="ff">
-          <label>รูปภาพ</label>
+          <label>Photos</label>
           <div class="upload-zone" onclick="document.getElementById('img-in').click()">
-            <div class="ui">🖼️</div><p>คลิกเพื่อเลือกรูป &nbsp;<strong>JPG PNG GIF WebP</strong></p>
+            <div class="ui">🖼️</div><p>Click to select images &nbsp;<strong>JPG PNG GIF WebP</strong></p>
           </div>
           <input type="file" id="img-in" accept="image/*" multiple style="display:none" onchange="addImgs(event)">
           <div class="pg" id="pg"></div>
         </div>
         <div class="fa-row">
-          <button class="btn-clr" onclick="clearF()">ล้างฟอร์ม</button>
-          <button class="btn-save" id="save-btn" onclick="saveEntry()">💾 บันทึก</button>
+          <button class="btn-clr" onclick="clearF()">Clear Form</button>
+          <button class="btn-save" id="save-btn" onclick="saveEntry()">💾 Save</button>
         </div>
       </div>
     </div>
 
-    <div class="sbar"><h2 id="list-head">รายการทั้งหมด</h2></div>
+    <div class="sbar"><h2 id="list-head">All Entries</h2></div>
     <div class="filter-bar">
-      <input class="fi-inp" id="search" placeholder="🔍 ค้นหา..." oninput="renderEntries()">
+      <input class="fi-inp" id="search" placeholder="🔍 Search..." oninput="renderEntries()">
       <input class="fi-date" id="dfilter" type="date" onchange="renderEntries()">
-      <button class="btn-clr" id="group-btn" style="white-space:nowrap;padding:8px 13px;font-size:13px" onclick="toggleGroup()">📁 แยกตามโฟลเดอร์</button>
-      <button class="btn-clr" style="white-space:nowrap;padding:8px 13px;font-size:13px" onclick="clearF2()">รีเซ็ต</button>
+      <button class="btn-clr" id="group-btn" style="white-space:nowrap;padding:8px 13px;font-size:13px" onclick="toggleGroup()">📁 Group by Folder</button>
+      <button class="btn-clr" style="white-space:nowrap;padding:8px 13px;font-size:13px" onclick="clearF2()">Reset</button>
     </div>
     <div class="entries-list" id="entries-list"></div>
   </main>
@@ -396,13 +396,13 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 <!-- FOLDER MODAL -->
 <div class="mo" id="fm">
   <div class="mb">
-    <h3 id="fm-title">📁 สร้างโฟลเดอร์ใหม่</h3>
-    <div class="mf"><label>ชื่อโฟลเดอร์</label><input type="text" id="fm-name" placeholder="เช่น งาน, ส่วนตัว, การเรียน..."></div>
-    <div class="mf"><label>คำอธิบาย (ไม่บังคับ)</label><input type="text" id="fm-desc" placeholder="อธิบายหมวดหมู่นี้"></div>
-    <div class="mf"><label>สีโฟลเดอร์</label><div class="cp-row" id="cp-row"></div></div>
+    <h3 id="fm-title">📁 New Folder</h3>
+    <div class="mf"><label>Folder Name</label><input type="text" id="fm-name" placeholder="e.g. Work, Personal, Study..."></div>
+    <div class="mf"><label>Description (optional)</label><input type="text" id="fm-desc" placeholder="Describe this category"></div>
+    <div class="mf"><label>Folder Color</label><div class="cp-row" id="cp-row"></div></div>
     <div class="ma">
-      <button class="btn-mc" onclick="closeFM()">ยกเลิก</button>
-      <button class="btn-mok" onclick="saveFolder()">💾 บันทึก</button>
+      <button class="btn-mc" onclick="closeFM()">Cancel</button>
+      <button class="btn-mok" onclick="saveFolder()">💾 Save</button>
     </div>
   </div>
 </div>
@@ -410,32 +410,32 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
 <!-- EDIT ENTRY MODAL -->
 <div class="mo" id="em">
   <div class="mb wide">
-    <h3>✏️ แก้ไขรายการ</h3>
+    <h3>✏️ Edit Entry</h3>
     <div id="e-owner-notice" style="display:none;align-items:center;gap:8px;padding:9px 12px;background:var(--bg-warm);border-radius:var(--radius-sm);font-size:12px;color:var(--ink-muted);margin-bottom:16px">
-      👤 รายการนี้บันทึกโดย <strong id="e-owner-name" style="color:var(--ink);margin-left:3px"></strong>
+      👤 This entry was saved by <strong id="e-owner-name" style="color:var(--ink);margin-left:3px"></strong>
     </div>
     <input type="hidden" id="e-id">
-    <div class="mf"><label>กิจกรรม / สิ่งที่ทำ</label><input type="text" id="e-act" placeholder="กิจกรรม..."></div>
+    <div class="mf"><label>Activity / What you did</label><input type="text" id="e-act" placeholder="Activity..."></div>
     <div class="mrow">
-      <div class="mf"><label>เวลา</label><input type="time" id="e-time"></div>
-      <div class="mf"><label>📁 โฟลเดอร์</label><select id="e-folder"><option value="">— ไม่ระบุ —</option></select></div>
+      <div class="mf"><label>Time</label><input type="time" id="e-time"></div>
+      <div class="mf"><label>📁 Folder</label><select id="e-folder"><option value="">— None —</option></select></div>
     </div>
-    <div class="mf"><label>สรุปสั้น ๆ</label><input type="text" id="e-sum" placeholder="(ไม่บังคับ)"></div>
-    <div class="mf"><label>รายละเอียด</label><textarea id="e-det" placeholder="รายละเอียด..."></textarea></div>
+    <div class="mf"><label>Short Summary</label><input type="text" id="e-sum" placeholder="(optional)"></div>
+    <div class="mf"><label>Details</label><textarea id="e-det" placeholder="Details..."></textarea></div>
     <div class="mrow">
-      <div class="mf"><label>🔴 ปัญหาที่พบ</label><textarea id="e-prob" placeholder="ปัญหา"></textarea></div>
-      <div class="mf"><label>🟢 วิธีแก้</label><textarea id="e-sol" placeholder="วิธีแก้ปัญหา"></textarea></div>
+      <div class="mf"><label>🔴 Problem</label><textarea id="e-prob" placeholder="Problem"></textarea></div>
+      <div class="mf"><label>🟢 Solution</label><textarea id="e-sol" placeholder="Solution"></textarea></div>
     </div>
     <div class="mf">
-      <label>รูปภาพ</label>
+      <label>Photos</label>
       <div class="eim-grid" id="eim-grid"></div>
-      <div class="img-add" onclick="document.getElementById('eim-in').click()">＋ เพิ่มรูปภาพ</div>
+      <div class="img-add" onclick="document.getElementById('eim-in').click()">＋ Add Photo</div>
       <input type="file" id="eim-in" accept="image/*" multiple style="display:none" onchange="addEImgs(event)">
     </div>
     <div class="ma">
-      <button class="btn-mdel" onclick="delFromEdit()">🗑️ ลบรายการ</button>
-      <button class="btn-mc" onclick="closeEM()">ยกเลิก</button>
-      <button class="btn-mok" id="e-save-btn" onclick="saveEdit()">💾 บันทึกการแก้ไข</button>
+      <button class="btn-mdel" onclick="delFromEdit()">🗑️ Delete Entry</button>
+      <button class="btn-mc" onclick="closeEM()">Cancel</button>
+      <button class="btn-mok" id="e-save-btn" onclick="saveEdit()">💾 Save Changes</button>
     </div>
   </div>
 </div>
@@ -529,12 +529,12 @@ window.toggleNP = () => {
 };
 window.applyName = () => {
   const v = document.getElementById('ni').value.trim();
-  if (!v) { toast('กรุณาพิมพ์ชื่อ','err'); return; }
+  if (!v) { toast('Please enter a name','err'); return; }
   myName = v; localStorage.setItem('jname', myName);
   viewOwner = null;
   document.getElementById('name-panel').classList.remove('show');
   refreshChip(); refreshSidebar(); subAll();
-  toast(`✅ ตั้งชื่อเป็น "${myName}" แล้ว`,'ok');
+  toast(`✅ Name set to "${myName}"`,'ok');
 };
 window.setVM = (m) => {
   vm = m;
@@ -554,36 +554,36 @@ window.viewOwnerFn = (name) => {
 
 function refreshChip() {
   document.getElementById('chip-av').textContent = myName ? myName[0].toUpperCase() : '?';
-  document.getElementById('chip-lbl').textContent = myName || 'ระบุชื่อของคุณ';
+  document.getElementById('chip-lbl').textContent = myName || 'Set your name';
 }
 function refreshSidebar() {
-  const dn = viewOwner ? viewOwner : (vm === 'my' ? (myName || '—') : 'ทุกคน');
+  const dn = viewOwner ? viewOwner : (vm === 'my' ? (myName || '—') : 'Everyone');
   document.getElementById('pname').textContent = dn;
-  document.getElementById('pav').textContent = (dn && dn !== 'ทุกคน') ? dn[0].toUpperCase() : '🌐';
+  document.getElementById('pav').textContent = (dn && dn !== 'Everyone') ? dn[0].toUpperCase() : '🌐';
 
   const vb = document.getElementById('vbadge'), vt = document.getElementById('vtxt');
   const rn = document.getElementById('rn');
   const sb = document.getElementById('save-btn');
   if (viewOwner) {
-    vb.className = 'vbadge other'; vt.textContent = `ดูของ: ${viewOwner}`;
+    vb.className = 'vbadge other'; vt.textContent = `Viewing: ${viewOwner}`;
     document.getElementById('rn-own').textContent = viewOwner;
     rn.classList.add('show');
   } else if (vm === 'all') {
-    vb.className = 'vbadge other'; vt.textContent = 'ดูรายการทุกคน'; rn.classList.remove('show');
+    vb.className = 'vbadge other'; vt.textContent = "Viewing everyone's entries"; rn.classList.remove('show');
   } else {
-    vb.className = 'vbadge'; vt.textContent = myName ? `บันทึกในชื่อ: ${myName}` : 'ยังไม่ระบุชื่อ'; rn.classList.remove('show');
+    vb.className = 'vbadge'; vt.textContent = myName ? `Saving as: ${myName}` : 'No name set'; rn.classList.remove('show');
   }
   sb.disabled = !myName;
-  document.getElementById('ch-sub').textContent = myName ? `บันทึกเป็น: ${myName}` : '⚠️ ระบุชื่อก่อนบันทึก';
+  document.getElementById('ch-sub').textContent = myName ? `Saving as: ${myName}` : '⚠️ Set a name before saving';
 }
 
 function setDateDisplay() {
   const now = new Date();
-  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  const days = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   document.getElementById('dday').textContent = now.getDate();
-  document.getElementById('dsub').textContent = `${months[now.getMonth()]} ${now.getFullYear()+543}`;
-  document.getElementById('psub').textContent = `วัน${days[now.getDay()]}ที่ ${now.getDate()} ${months[now.getMonth()]}`;
+  document.getElementById('dsub').textContent = `${months[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('psub').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
 }
 
 /* COLOR PICKER */
@@ -635,14 +635,14 @@ function subEntries() {
 function renderKnown() {
   const list = document.getElementById('known-list');
   if (!list) return;
-  if (allOwners.length === 0) { list.innerHTML = '<div style="font-size:13px;color:var(--ink-muted);padding:6px 4px">ยังไม่มีรายการในระบบ</div>'; return; }
+  if (allOwners.length === 0) { list.innerHTML = '<div style="font-size:13px;color:var(--ink-muted);padding:6px 4px">No entries in the system yet</div>'; return; }
   list.innerHTML = allOwners.map(name => {
     const cnt = entries.filter(e => e.owner === name).length;
     const active = viewOwner === name;
     const self = name === myName;
     return `<div class="kn-item${active?' active':''}" onclick="viewOwnerFn('${ea(name)}')">
       <div class="kn-av" style="background:${n2c(name)}">${name[0].toUpperCase()}</div>
-      <span class="kn-lbl">${esc(name)}${self?'<span style="font-size:10px;color:var(--accent)"> (ฉัน)</span>':''}</span>
+      <span class="kn-lbl">${esc(name)}${self?'<span style="font-size:10px;color:var(--accent)"> (me)</span>':''}</span>
       <span class="kn-cnt">${cnt}</span>
     </div>`;
   }).join('');
@@ -650,18 +650,18 @@ function renderKnown() {
 
 /* FOLDER CRUD */
 window.openFM = (fid) => {
-  if (!myName) { toast('ระบุชื่อของคุณก่อน','err'); return; }
+  if (!myName) { toast('Please set your name first','err'); return; }
   editFId = fid || null;
   if (fid) {
     const f = folders.find(x => x.id === fid); if (!f) return;
-    document.getElementById('fm-title').textContent = '✏️ แก้ไขโฟลเดอร์';
+    document.getElementById('fm-title').textContent = '✏️ Edit Folder';
     document.getElementById('fm-name').value = f.name;
     document.getElementById('fm-desc').value = f.desc || '';
     document.querySelectorAll('.cdot').forEach(d => d.classList.remove('sel'));
     const d = document.querySelector(`.cdot[data-c="${f.color}"]`);
     if (d) d.classList.add('sel');
   } else {
-    document.getElementById('fm-title').textContent = '📁 สร้างโฟลเดอร์ใหม่';
+    document.getElementById('fm-title').textContent = '📁 New Folder';
     document.getElementById('fm-name').value = '';
     document.getElementById('fm-desc').value = '';
     buildCP();
@@ -672,31 +672,31 @@ window.openFM = (fid) => {
 window.closeFM = () => { document.getElementById('fm').classList.remove('show'); editFId = null; };
 window.saveFolder = async () => {
   const name = document.getElementById('fm-name').value.trim();
-  if (!name) { toast('กรุณาระบุชื่อโฟลเดอร์','err'); return; }
+  if (!name) { toast('Please enter a folder name','err'); return; }
   const color = getC();
   const desc = document.getElementById('fm-desc').value.trim();
   try {
     if (editFId) {
       await updateDoc(doc(db,'folders',editFId), { name, color, desc });
-      toast('✅ แก้ไขโฟลเดอร์แล้ว','ok');
+      toast('✅ Folder updated','ok');
     } else {
       await addDoc(collection(db,'folders'), { owner:myName, name, color, desc, createdAt:serverTimestamp() });
-      toast('📁 สร้างโฟลเดอร์แล้ว','ok');
+      toast('📁 Folder created','ok');
     }
     closeFM();
-  } catch(e) { toast('ผิดพลาด: '+e.message,'err'); }
+  } catch(e) { toast('Error: '+e.message,'err'); }
 };
 window.delFolder = async (fid) => {
   const f = folders.find(x => x.id === fid); if (!f) return;
   const cnt = entries.filter(e => e.folderId === fid).length;
-  if (!confirm(`ลบโฟลเดอร์ "${f.name}"?${cnt > 0 ? `\n(${cnt} รายการจะถูกย้ายออก)` : ''}`)) return;
+  if (!confirm(`Delete folder "${f.name}"?${cnt > 0 ? `\n(${cnt} entries will be moved out)` : ''}`)) return;
   try {
     await deleteDoc(doc(db,'folders',fid));
     const up = entries.filter(e => e.folderId === fid && e.owner === myName);
     await Promise.all(up.map(e => updateDoc(doc(db,'entries',e.id), { folderId:'' })));
     if (selFolder === fid) selF(null);
-    toast('ลบโฟลเดอร์แล้ว');
-  } catch(e) { toast('ผิดพลาด','err'); }
+    toast('Folder deleted');
+  } catch(e) { toast('Error','err'); }
 };
 
 window.selF = (fid) => {
@@ -708,9 +708,9 @@ window.selF = (fid) => {
 
 function updateHead() {
   const h = document.getElementById('list-head');
-  const sfx = viewOwner ? ` — ของ ${viewOwner}` : (vm === 'all' ? ' — ทุกคน' : '');
+  const sfx = viewOwner ? ` — by ${viewOwner}` : (vm === 'all' ? ' — Everyone' : '');
   if (!selFolder) {
-    h.innerHTML = `รายการทั้งหมด<span style="font-size:14px;font-weight:400;color:var(--ink-muted)">${sfx}</span>`;
+    h.innerHTML = `All Entries<span style="font-size:14px;font-weight:400;color:var(--ink-muted)">${sfx}</span>`;
   } else {
     const f = folders.find(x => x.id === selFolder);
     if (f) h.innerHTML = `<span style="background:${f.color}20;color:${f.color};padding:3px 10px;border-radius:20px;font-size:14px;font-weight:600">📁 ${esc(f.name)}</span><span style="font-size:14px;font-weight:400;color:var(--ink-muted)">${sfx}</span>`;
@@ -739,7 +739,7 @@ function renderFolderSidebar() {
   if (folders.length === 0) {
     const hint = document.createElement('div');
     hint.style.cssText = 'font-size:12px;color:var(--ink-muted);padding:8px 4px;line-height:1.5';
-    hint.textContent = 'ยังไม่มีโฟลเดอร์ — กด "＋ สร้างโฟลเดอร์" ด้านบนเพื่อเริ่มสร้างหมวดหมู่';
+    hint.textContent = 'No folders yet — click "＋ New Folder" above to start creating categories';
     hint.className = 'fi';
     list.appendChild(hint);
     return;
@@ -756,8 +756,8 @@ function renderFolderSidebar() {
       <span class="fn" title="${ea(f.desc||f.name)}">${esc(f.name)}</span>
       <span class="fc">${cnt}</span>
       <div class="fa">
-        <button class="bfa" onclick="event.stopPropagation();openFM('${f.id}')" title="แก้ไข">✏️</button>
-        <button class="bfa d" onclick="event.stopPropagation();delFolder('${f.id}')" title="ลบ">🗑️</button>
+        <button class="bfa" onclick="event.stopPropagation();openFM('${f.id}')" title="Edit">✏️</button>
+        <button class="bfa d" onclick="event.stopPropagation();delFolder('${f.id}')" title="Delete">🗑️</button>
       </div>`;
     list.appendChild(div);
   });
@@ -767,7 +767,7 @@ function renderFolderSelects() {
   ['f-folder','e-folder'].forEach(id => {
     const sel = document.getElementById(id); if (!sel) return;
     const cur = sel.value;
-    sel.innerHTML = '<option value="">— ไม่ระบุ —</option>';
+    sel.innerHTML = '<option value="">— None —</option>';
     folders.forEach(f => {
       const o = document.createElement('option');
       o.value = f.id; o.textContent = f.name;
@@ -794,13 +794,13 @@ window.rmImg = (i) => { imgs.splice(i,1); renderPG(); };
 
 /* SAVE ENTRY */
 window.saveEntry = async () => {
-  if (!myName) { toast('ระบุชื่อของคุณก่อนบันทึก','err'); toggleNP(); return; }
+  if (!myName) { toast('Please set your name before saving','err'); toggleNP(); return; }
   const act = document.getElementById('f-act').value.trim();
   const tm = document.getElementById('f-time').value;
-  if (!act) { toast('กรุณาระบุกิจกรรม','err'); return; }
-  if (!tm) { toast('กรุณาระบุเวลา','err'); return; }
+  if (!act) { toast('Please enter an activity','err'); return; }
+  if (!tm) { toast('Please enter a time','err'); return; }
   const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+  btn.disabled = true; btn.textContent = 'Saving...';
   try {
     const chosenFolder = document.getElementById('f-folder').value || '';
     await addDoc(collection(db,'entries'), {
@@ -817,12 +817,12 @@ window.saveEntry = async () => {
     });
     clearF();
     if (!chosenFolder && folders.length > 0) {
-      toast('✅ บันทึกแล้ว (ยังไม่มีโฟลเดอร์ — กด 📁 ที่การ์ดเพื่อจัดหมวดทีหลังได้)','ok');
+      toast('✅ Saved (no folder yet — click 📁 on the card to organize later)','ok');
     } else {
-      toast('✅ บันทึกสำเร็จ!','ok');
+      toast('✅ Saved successfully!','ok');
     }
-  } catch(e) { toast('บันทึกไม่สำเร็จ: '+e.message,'err'); }
-  finally { btn.disabled = false; btn.textContent = '💾 บันทึก'; refreshSidebar(); }
+  } catch(e) { toast('Save failed: '+e.message,'err'); }
+  finally { btn.disabled = false; btn.textContent = '💾 Save'; refreshSidebar(); }
 };
 window.clearF = () => {
   ['f-act','f-sum','f-det','f-prob','f-sol'].forEach(id => document.getElementById(id).value = '');
@@ -835,7 +835,7 @@ window.clearF = () => {
 /* EDIT MODAL */
 window.openEM = (id) => {
   const e = entries.find(x => x.id === id); if (!e) return;
-  if (!myName) { toast('ระบุชื่อของคุณก่อนแก้ไข','err'); toggleNP(); return; }
+  if (!myName) { toast('Please set your name before editing','err'); toggleNP(); return; }
   document.getElementById('e-id').value = id;
   const notice = document.getElementById('e-owner-notice');
   if (e.owner && e.owner !== myName) {
@@ -879,9 +879,9 @@ window.saveEdit = async () => {
   const id = document.getElementById('e-id').value;
   const act = document.getElementById('e-act').value.trim();
   const tm = document.getElementById('e-time').value;
-  if (!act) { toast('กรุณาระบุกิจกรรม','err'); return; }
+  if (!act) { toast('Please enter an activity','err'); return; }
   const btn = document.getElementById('e-save-btn');
-  btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
+  btn.disabled = true; btn.textContent = 'Saving...';
   try {
     await updateDoc(doc(db,'entries',id), {
       activity: act, time: tm,
@@ -894,23 +894,23 @@ window.saveEdit = async () => {
       updatedAt: serverTimestamp()
     });
     closeEM();
-    toast('✅ แก้ไขสำเร็จ!','ok');
-  } catch(e) { toast('ผิดพลาด: '+e.message,'err'); }
-  finally { btn.disabled = false; btn.textContent = '💾 บันทึกการแก้ไข'; }
+    toast('✅ Edit saved!','ok');
+  } catch(e) { toast('Error: '+e.message,'err'); }
+  finally { btn.disabled = false; btn.textContent = '💾 Save Changes'; }
 };
 window.delFromEdit = async () => {
   const id = document.getElementById('e-id').value;
-  if (!confirm('ลบรายการนี้?')) return;
+  if (!confirm('Delete this entry?')) return;
   await deleteDoc(doc(db,'entries',id));
-  closeEM(); toast('ลบรายการแล้ว');
+  closeEM(); toast('Entry deleted');
 };
 
 /* DELETE ENTRY */
 window.delEntry = async (id, owner) => {
-  if (!myName) { toast('ระบุชื่อของคุณก่อนลบ','err'); toggleNP(); return; }
-  if (!confirm('ลบรายการนี้?')) return;
+  if (!myName) { toast('Please set your name before deleting','err'); toggleNP(); return; }
+  if (!confirm('Delete this entry?')) return;
   await deleteDoc(doc(db,'entries',id));
-  toast('ลบรายการแล้ว');
+  toast('Entry deleted');
 };
 
 /* RENDER ENTRIES */
@@ -933,7 +933,7 @@ window.renderEntries = () => {
   const list = document.getElementById('entries-list');
 
   if (filtered.length === 0) {
-    list.innerHTML = `<div class="empty"><div class="ei">📭</div><h3>${entries.length===0?'ยังไม่มีรายการ':'ไม่พบรายการที่ค้นหา'}</h3><p>${entries.length===0?'เริ่มบันทึกกิจกรรมแรกของคุณได้เลย!':'ลองเปลี่ยนคำค้นหาหรือตัวกรอง'}</p></div>`;
+    list.innerHTML = `<div class="empty"><div class="ei">📭</div><h3>${entries.length===0?'No entries yet':'No matching entries found'}</h3><p>${entries.length===0?'Start logging your first activity!':'Try changing your search or filters'}</p></div>`;
     updateHead();
     return;
   }
@@ -952,7 +952,7 @@ window.renderEntries = () => {
      For entries owned by someone else (when in "all" mode), their
      folderId never matches my own folders, so they fall into "no folder"
      unless we're only looking at my own entries. */
-  const groupsOrder = [...folders, { id:'', name:'ไม่มีโฟลเดอร์', color:'#8888aa' }];
+  const groupsOrder = [...folders, { id:'', name:'No Folder', color:'#8888aa' }];
   const buckets = {};
   groupsOrder.forEach(g => buckets[g.id] = []);
   filtered.forEach(e => {
@@ -991,7 +991,7 @@ function renderCard(e) {
       <div class="em">
         <div class="ea">${esc(e.activity)}</div>
         <div class="ebd">
-          <span class="badge bt">🕐 ${e.time} น.</span>
+          <span class="badge bt">🕐 ${e.time}</span>
           <span class="badge bd">📅 ${fmtDate(e.date)}</span>
           ${fBadge}${oBadge}
         </div>
@@ -999,22 +999,22 @@ function renderCard(e) {
       <div class="e-acts">
         ${isOwn ? `
           <div class="qf-wrap">
-            <button class="bi" onclick="toggleQF(event,'${e.id}')" title="ย้ายโฟลเดอร์">📁</button>
+            <button class="bi" onclick="toggleQF(event,'${e.id}')" title="Move to Folder">📁</button>
             <div class="qf-pop" id="qf-${e.id}">
-              <div class="qf-head">ย้ายไปโฟลเดอร์</div>
+              <div class="qf-head">Move to Folder</div>
               ${qfOptions(e)}
             </div>
           </div>
         ` : ''}
-        <button class="bi ed" onclick="openEM('${e.id}')" title="แก้ไข">✏️</button>
-        <button class="bi dl" onclick="delEntry('${e.id}','${ea(e.owner||'')}'" title="ลบ">🗑️</button>
+        <button class="bi ed" onclick="openEM('${e.id}')" title="Edit">✏️</button>
+        <button class="bi dl" onclick="delEntry('${e.id}','${ea(e.owner||'')}'" title="Delete">🗑️</button>
       </div>
     </div>
     <div class="ebody">
       ${e.summary ? `<div class="es"><div class="esc" style="font-weight:600;color:var(--ink)">${esc(e.summary)}</div></div>` : ''}
-      ${e.detail ? `<div class="es"><div class="esl">สิ่งที่ทำ</div><div class="esc">${esc(e.detail)}</div></div>` : ''}
-      ${e.problem ? `<div class="es prob"><div class="esl">🔴 ปัญหาที่พบ</div><div class="esc">${esc(e.problem)}</div></div>` : ''}
-      ${e.solution ? `<div class="es sol"><div class="esl">🟢 วิธีแก้ปัญหา</div><div class="esc">${esc(e.solution)}</div></div>` : ''}
+      ${e.detail ? `<div class="es"><div class="esl">What was done</div><div class="esc">${esc(e.detail)}</div></div>` : ''}
+      ${e.problem ? `<div class="es prob"><div class="esl">🔴 Problem</div><div class="esc">${esc(e.problem)}</div></div>` : ''}
+      ${e.solution ? `<div class="es sol"><div class="esl">🟢 Solution</div><div class="esc">${esc(e.solution)}</div></div>` : ''}
       ${photos}
     </div>
   </div>`;
@@ -1023,10 +1023,10 @@ function renderCard(e) {
 function qfOptions(e) {
   const cur = e.folderId || '';
   const noneItem = `<div class="qf-item${cur===''?' cur':''}" onclick="quickAssign('${e.id}','')">
-    <div class="qf-dot" style="background:#8888aa"></div>ไม่มีโฟลเดอร์
+    <div class="qf-dot" style="background:#8888aa"></div>No Folder
   </div>`;
   if (folders.length === 0) {
-    return noneItem + `<div class="qf-empty">ยังไม่มีโฟลเดอร์ — สร้างได้จากแถบซ้าย</div>`;
+    return noneItem + `<div class="qf-empty">No folders yet — create one from the sidebar</div>`;
   }
   const items = folders.map(f => `
     <div class="qf-item${cur===f.id?' cur':''}" onclick="quickAssign('${e.id}','${f.id}')">
@@ -1047,8 +1047,8 @@ window.quickAssign = async (id, folderId) => {
   document.querySelectorAll('.qf-pop.show').forEach(p => p.classList.remove('show'));
   try {
     await updateDoc(doc(db,'entries',id), { folderId });
-    toast(folderId ? '📁 ย้ายโฟลเดอร์แล้ว' : 'นำออกจากโฟลเดอร์แล้ว','ok');
-  } catch(e) { toast('ผิดพลาด: '+e.message,'err'); }
+    toast(folderId ? '📁 Moved to folder' : 'Removed from folder','ok');
+  } catch(e) { toast('Error: '+e.message,'err'); }
 };
 
 document.addEventListener('click', () => {
@@ -1089,8 +1089,8 @@ const pad = n => String(n).padStart(2,'0');
 function fmtDate(ds) {
   if (!ds) return '';
   const d = new Date(ds+'T00:00:00');
-  const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  return `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()+543}`;
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${m[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
 function n2c(name) {
   let h = 0;
