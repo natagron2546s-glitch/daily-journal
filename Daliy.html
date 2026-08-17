@@ -288,8 +288,8 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink);min-
   <div class="np-head">👤 Select name / Switch user</div>
   <div class="np-body">
     <div class="view-tabs">
-      <button class="view-tab active" id="vtab-my" onclick="setVM('my')">📝 Mine</button>
-      <button class="view-tab" id="vtab-all" onclick="setVM('all')">🌐 Everyone</button>
+      <button class="view-tab" id="vtab-my" onclick="setVM('my')">📝 Mine</button>
+      <button class="view-tab active" id="vtab-all" onclick="setVM('all')">🌐 Everyone</button>
     </div>
     <div class="name-input-row">
       <input class="ni" id="ni" placeholder="Type your name...">
@@ -468,7 +468,7 @@ const db = getFirestore(app);
 
 /* STATE */
 let myName = localStorage.getItem('jname') || '';
-let vm = 'my';          // 'my' | 'all'
+let vm = 'all';         // 'my' | 'all' — default to everyone's entries, no name required to view
 let viewOwner = null;   // specific owner filter
 let entries = [];
 let folders = [];
